@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<script>
+    /*let map = new Map([
+        ["Hi", "Привет"],
+        [42, "Blabla"],
+        [true, "boolean"],
+        [{}, "Object"],
+    ]);
+    console.log( map );*/
+
+    /*let map = new Map();
+    map.set(true, "Boolean Type");
+    map.set(44, "Number 44");
+    // map.clear();
+    console.log( map );
+    console.log( `map.size: ${map.size}` );
+    console.log( `map.get(true): ${map.get(true)}` );
+    console.log( `map.has(41): ${map.has(41)}` );
+    console.log( `map.delete(44): ${map.delete(44)}` );*/
+
+
+    let map = new Map();
+    map.set("HTML", "Hyper Text Markup Language")
+        .set("CSS", "Cascading Style Sheets")
+        .set("JS", "JavaScript");
+
+    // console.log( map.keys() ); //MapIterator
+    // console.log( [...map.keys()] );
+    // console.log( [...map.values()] );
+    // console.log( [...map.entries()] ); // Возвращает массив, состоящий из других массивов
+
+    let [ first, second, [thirdKey, thirdValue] ] = map;
+    // console.log( first );
+    // console.log( second );
+    // console.log( thirdKey, thirdValue );
+    
+    for (let [key, value] of map) {
+        console.log( key, value );
+    }
+
+
+
+</script>
+</body>
+</html>

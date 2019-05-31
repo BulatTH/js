@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<script>
+    /*function* generate() {
+        console.log( "start" );
+        yield;
+        console.log( "end" );
+
+    }
+
+    let iterator = generate();
+    iterator.next();
+    iterator.next();*/
+
+    /*function* range(start, end) {
+        for (let a = start; a <= end; a+=1) {
+            yield a;
+        }
+    }
+    
+    for (let id of range(1, 10)) {
+        console.log( id );
+    }*/
+
+    /*function* generator() {
+        let result = 1 + (yield);
+        console.log( `result: ${result}` );
+    }
+
+    let iterator = generator();
+    console.log( iterator.next() );
+    console.log( iterator.next(1) );*/
+
+
+    /*function* generator() {
+        let array = [yield, yield, yield];
+        console.log( array[2] );
+    }
+
+    let iterator = generator();
+    console.log( iterator.next() );
+    console.log( iterator.next(11) );
+    console.log( iterator.next(22) );
+    console.log( iterator.next(33) );*/
+
+    /*function* generator() {
+        yield 43;
+        yield* [1,2,3]; //Делегирование
+        yield 44;
+    }
+
+    let iterator = generator();
+    console.log( iterator.next().value ); // 43
+    console.log( iterator.next().value ); // 1
+    console.log( iterator.next().value ); // 2
+    console.log( iterator.next().value ); // 3
+    console.log( iterator.next().value ); // 44*/
+
+    /*function* generateArray() {
+        yield* [1,2,3]; //Делегирование
+    }
+
+    function* generator() {
+        yield 43;
+        yield* generateArray();
+        yield 44;
+    }
+
+    let iterator = generator();
+    console.log( iterator.next().value ); // 43
+    console.log( iterator.next().value ); // 1
+    console.log( iterator.next().value ); // 2
+    console.log( iterator.next().value ); // 3
+    console.log( iterator.next().value ); // 44*/
+
+
+    function* generator() {
+        try {
+            yield 1;
+            yield 2;
+            yield 3;
+        } catch (e) {
+            console.error( e );
+        }
+        
+    }
+
+    let iterator = generator();
+    console.log( iterator.next() );
+    // console.log( iterator.return() );
+    console.log( iterator.throw(new Error("WTF ?!")) );
+    console.log( iterator.next() );
+
+</script>
+
+
+</body>
+</html>

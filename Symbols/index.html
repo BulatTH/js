@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<script>
+    let symbol = Symbol.for('name');
+    // let symbol2 = Symbol.for('name');
+    // console.log( symbol === symbol2 );
+    let symbolKey = Symbol.keyFor(symbol);
+    // console.log( symbolKey );
+
+    let user = {
+        username: "r2d2",
+        [Symbol.for("password")]: 'c3po'
+    };
+    
+    // console.log(Object.keys(user));
+    // console.log(Object.getOwnPropertyNames(user));
+    // console.log(Object.getOwnPropertySymbols(user));
+
+    let password = user[Symbol.for("password")];
+    // console.log( password );
+
+
+
+</script>
+</body>
+</html>

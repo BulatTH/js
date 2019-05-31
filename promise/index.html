@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    
+    function applyForVisa() {
+        console.log( "Обработка заявления" );
+        return new Promise((resolve, reject) => {
+            setTimeout(()=>{
+                Math.random() > 0 ? resolve({}) : reject("В визе отказано: нехватка документов");
+            }, 2000);
+        });
+    }
+
+    function bookHotel(visa) {console.log( "Бронируем отель" );console.log( visa ); return Promise.reject("Blabla");}
+
+    function buyTickets (hotelInfo) { console.log( "Покупаем билеты" ); console.log( hotelInfo ); }
+
+    /*applyForVisa({})
+        .then(visa=>{console.log( "Виза получена" ); return {visa: true}})
+        .then(bookHotel)
+        .then(buyTickets)
+        .catch(error=>{console.error( error )});*/
+
+    function go(num) {
+        return new Promise((resolve, reject) => {
+            let delay = Math.ceil(Math.random() * 3000);
+            console.log( num, delay );
+            setTimeout(()=>resolve(num), delay);
+        });
+    }
+
+    let p1 = go(1);
+    let p2 = go(2);
+    let p3 = go(3);
+
+    Promise
+        .all([p1, p2, p3])
+        .then(val => console.log( val ));
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    /*async function getUser(id) {
+        return {id: 1};
+    }
+    let user = getUser(1).then(user => console.log( user ));*/
+
+    // __________________________________________________________________________________________
+
+    /*async function getUser(id) {
+        return {id: 1};
+    }
+
+    async function main() {
+        let user = await getUser(1);
+        console.log( user );
+    }
+    main();*/
+
+    // __________________________________________________________________________________________
+
+    /*function getUser(id) {
+        return new Promise((resolve, reject) => {
+            setTimeout(function () {
+                return resolve({id: 1});
+            }, 1200);
+        });
+
+    }
+
+    (async function () {
+        let user = await getUser(1);
+        console.log( user );
+    })();*/
+
+    // __________________________________________________________________________________________
+
+    async function getUser(id) {
+        let response;
+        setTimeout(await function () {
+            response = {id: 1};
+        }, 1200);
+        return response;
+    }
+
+    (async function () {
+        let user = await getUser(1);
+        console.log( user );
+    })();
+
+
+    
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+<script>
+    let xmens = ["Cyclops", "Wolverine", "Rogue"];
+    let iterator = xmens[Symbol.iterator]();
+
+    
+    /*console.log( iterator.next() );
+    console.log( iterator.next() );
+    console.log( iterator.next() );
+    console.log( iterator.next() );*/
+
+    /*let next = iterator.next();
+    while (!next.done) {
+        console.log( next.value );
+        next = iterator.next();
+    }*/
+
+
+    let idGenerator = {
+        [Symbol.iterator](){
+            let id = 1;
+            return {
+                next(){
+                    let value = (id <= 50) ? id++ : undefined;
+                    let done = !value;
+
+                    return {value, done}
+                }
+            }
+        }
+    };
+    
+    for (let id of idGenerator) {
+        console.log( id );
+    }
+    
+</script>
+</body>
+</html>
