@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="lodash.min.js"></script>
+<script>
+    function Users(params = {}) {
+        let url = "https://jsonplaceholder.typicode.com/users/";
+
+        if (Object.keys(params).length !== 0) {
+            let paramsString = _.map(params, (value, key) => `${key}=${value}`).join("&");
+            url += `?${paramsString}`;
+        }
+
+        this.load = function () {
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    let clone = _.cloneDeep(data).map( item => ({id: item["id"], name: item["name"]}) );
+                    console.log( clone );
+                })
+                .catch(err => console.error(err));
+        }
+    }
+
+    let params = {
+        id: 2,
+        name: "Ervin Howell"
+    };
+
+    let users = new Users(params);
+    users.load();
+
+</script>
+
+
+
+</body>
+</html>
