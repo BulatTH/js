@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    function Counter() {
+        let count = 0;
+
+        function counter() {
+            return ++count;
+        }
+
+        counter.clear = function () {
+            count = 0;
+        };
+
+        counter.set = function (c) {
+            count = c;
+        };
+
+        return counter;
+    }
+
+    let counter = new Counter();
+    console.log( counter() );
+    console.log( counter() );
+    counter.clear();
+    counter.set(10);
+    console.log( counter() );
+
+</script>
+
+</body>
+</html>
