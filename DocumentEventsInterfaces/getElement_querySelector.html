@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<header></header>
+
+<a href="http://example.com/file.zip">...</a>
+<a href="http://ya.ru">...</a>
+
+<div class="content">
+    <div id="left-menu">
+        
+    </div>
+</div>
+
+<footer></footer>
+
+<script>
+    // console.log( window["left-menu"] );
+    let leftMenu = document.getElementById("left-menu");
+
+    let aHref = document.getElementsByTagName("a");
+    for (let a = 0; a < aHref.length; a+=1) {
+        if (aHref[a].matches("a[href$='zip']")) {
+            // console.log( aHref[a] );
+        }
+    }
+
+
+
+</script>
+
+</body>
+</html>
