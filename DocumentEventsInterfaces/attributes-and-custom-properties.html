@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="attr" data-user-id="14"></div>
+<div id="elem" about="Elephant" class="smiling jumping falling" data-user-location="USA"></div>
+
+
+<script>
+    /**
+     * Свои DOM-свойства
+     * */
+    document.body.myData = {
+        username: "admin",
+        age: 21
+    };
+    // console.log( document.body.myData.age );
+
+
+    document.body.sayHi = function () {
+        console.log( this.nodeName );
+    };
+    // document.body.sayHi();
+
+
+    // Attributes
+    if (document.querySelector(".attr").hasAttribute("data-user-id")) {                 // HAS
+        console.log( +document.querySelector(".attr").getAttribute("data-user-id") );   // GET
+        document.querySelector(".attr").setAttribute("data-username", "Mikey");         // SET
+        document.querySelector(".attr").removeAttribute("data-user-id");                // REMOVE
+    }
+
+    let attrs = document.getElementById("elem").attributes;
+    for (let a = 0; a < attrs.length; a+=1) {
+        console.log( `${attrs[a]['name']}: ${attrs[a]['value']}` );
+    }
+
+    let element = document.getElementById("elem");
+    console.log( element.classList.toggle("active") );
+    // setTimeout(()=>{classNames.classList.toggle("active")}, 1000);
+
+    console.log( element.dataset.userLocation )
+
+</script>
+
+</body>
+</html>
