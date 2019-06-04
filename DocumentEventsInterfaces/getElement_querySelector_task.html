@@ -1,0 +1,74 @@
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+<form name="search">
+    <label>Поиск по сайту:
+        <input type="text" name="search">
+    </label>
+    <input type="submit" value="Искать!">
+</form>
+
+<hr>
+
+<form name="search-person">
+    Поиск по посетителям:
+    <table id="age-table">
+        <tr>
+            <td>Возраст:</td>
+            <td id="age-list">
+                <label>
+                    <input type="radio" name="age" value="young">до 18</label>
+                <label>
+                    <input type="radio" name="age" value="mature">18-50</label>
+                <label>
+                    <input type="radio" name="age" value="senior">более 50</label>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Дополнительно:</td>
+            <td>
+                <input type="text" name="info[0]">
+                <input type="text" name="info[1]">
+                <input type="text" name="info[2]">
+            </td>
+        </tr>
+
+    </table>
+
+    <input type="submit" value="Искать!">
+</form>
+
+<script>
+    let table = document.getElementById("age-table");
+    // 1. Все элементы label внутри таблицы. Должно быть 3 элемента.
+    let labels = table.querySelectorAll("label");
+
+    // Первую ячейку таблицы (со словом "Возраст").
+    let firstTd = table.rows[0].cells[0];
+
+    // Вторую форму в документе.
+    let secondForm = document.querySelectorAll("form")[1];
+
+    // Форму с именем search, без использования её позиции в документе.
+    let searchForm = document.querySelector("form[name='search']");
+
+    // Элемент input в форме с именем search. Если их несколько, то нужен первый.
+    let searchFormInput = searchForm.querySelector("input");
+
+    // Элемент с именем info[0], без точного знания его позиции в документе.
+    let info0 = document.getElementsByName("info[0]")[0];
+
+    // Элемент с именем info[0], внутри формы с именем search-person.
+    let info0SearchPer = document.querySelector("form[name='search-person'] [name='info[0]']")
+
+</script>
+
+</body>
+</html>
