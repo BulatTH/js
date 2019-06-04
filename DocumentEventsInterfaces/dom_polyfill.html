@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    Element.prototype.sayHi = function () {
+        alert(`Hi from ${this}`);
+    };
+    // document.body.sayHi();
+
+
+    Object.defineProperty(Element.prototype, "tag", {
+        get() {
+            return this.tagName.toLowerCase();
+        }
+    });
+    // console.log( document.body.tag );
+
+
+
+
+</script>
+
+</body>
+</html>
