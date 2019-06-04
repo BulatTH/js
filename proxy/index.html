@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+<script>
+    /*
+     * Прокси (proxy) – особый объект, смысл которого – перехватывать обращения
+     * к другому объекту и, при необходимости, модифицировать их.
+     */
+    let user = {};
+    let proxy = new Proxy(user, {
+        get(target, prop){
+            console.log( `Reading ${prop}` );
+            return target[prop];
+        },
+        set(target, prop, value){
+            console.log( `Writing ${prop} ${value}` );
+            target[prop] = value;
+            return true;
+        },
+    });
+    // proxy.firstName = "Bob";
+    // console.log( proxy.firstName )
+
+
+    // ------------------------------------------------------------------------
+
+
+    let dictionary = {
+        "Hello":"Привет",
+        "Bye":"Пока",
+    };
+
+    dictionary = new Proxy(dictionary, {
+        get(target, phrase){
+            if (phrase in target){
+                return target[phrase];
+            } else {
+                console.error( `No phrase ${phrase}` );
+                return phrase;
+            }
+        },
+        has(target, phrase) {
+            return !!(target[phrase]);
+        },
+        deleteProperty(t, p) {
+            return true; // delete не будет работать, но будет возвращать true
+        }
+    });
+    // console.log( dictionary["Bazinga"] );
+    // console.log( "Blabla" in dictionary );
+    // console.log( delete dictionary["Bye"]); // не удалиться, так как мы аннигилировали свойство
+
+
+    // ------------------------------------------------------------------------
+
+    function sum(a,b) {
+        return a + b;
+    }
+    let proxyFun = new Proxy(sum, {
+        apply(target, thisArg, argList) {
+            console.log( `Will be calculating sum of ${argList}` );
+            return target.apply(thisArg, argList);
+        }
+    });
+
+    console.log( proxyFun(23, 44) );
+
+    // ------------------------------------------------------------------------
+
+    function Username(name, surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
+    let UserProxy = new Proxy(Username, {
+        construct(target, argList) {
+            console.log( `Start new with Arguments: ${argList}` );
+            return new target(...argList);
+        }
+    });
+
+    let username = new UserProxy("Ivan", "Ivanovich");
+    console.log( username.name );
+</script>
+
+</body>
+</html>
