@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .external {
+            background-color: yellow
+        }
+    </style>
+</head>
+<body>
+
+<a name="list">список</a>
+<ul>
+    <li><a href="http://google.com">http://google.com</a></li>
+    <li><a href="/tutorial">/tutorial.html</a></li>
+    <li><a href="local/path">local/path</a></li>
+    <li><a href="ftp://ftp.com/my.zip">ftp://ftp.com/my.zip</a></li>
+    <li><a href="http://nodejs.org">http://nodejs.org</a></li>
+    <li><a href="http://internal.com/test">http://internal.com/test</a></li>
+</ul>
+
+<script>
+    let hrefs = document.body.getElementsByTagName("a");
+
+    for (let a = 0; a < hrefs.length; a+=1) {
+        if (!hrefs[a].hasAttribute("href")) continue;
+        if (!hrefs[a].getAttribute("href").includes("://") || hrefs[a].getAttribute("href").includes("://internal.com")) continue;
+        // hrefs[a].classList.add("external");
+    }
+    let css = "[href*='://']:not([href*='://internal.com'])";
+    let elements = document.querySelectorAll(css);
+    Array.prototype.forEach.call(elements, (value, key) => { elements[key].classList.add("external") })
+
+</script>
+
+</body>
+</html>
