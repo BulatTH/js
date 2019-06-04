@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="just-div"> Just div </div>
+<ul>
+    <li>li-1</li>
+    <li>li-2</li>
+    <li>li-3</li>
+    <li>li-4</li>
+</ul>
+
+<!-- Comment -->
+
+<div class="test-1"></div>
+<div class="test-2" data-ngdu-id="1"></div>
+
+<script>
+    let nodeType = document.body.nodeType;
+    let childNotes = document.body.childNodes;
+    for (let a = 0; a < childNotes.length; a+=1) {
+        if (childNotes[a].nodeType !== 1) continue;
+        // console.log( childNotes[a] );
+    }
+
+    let nodeName = document.body.nodeName || document.body.tagName;
+    // console.log( nodeName )
+    
+    let childs = document.body.childNodes;
+    for (let a = 0; a < childs.length; a+=1) {
+        // console.log( (childs[a].data !== undefined) ? `data: ${childs[a].data}` : `innerHTML: ${childs[a].innerHTML}` );
+    }
+
+    let str = "<b>Винни-пух</b>";
+    document.querySelector(".test-1").innerHTML = str;
+    document.querySelector(".test-2").textContent = str;
+
+
+
+</script>
+
+</body>
+</html>
