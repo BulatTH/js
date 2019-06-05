@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .alert {
+            padding: 15px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            color: #3c763d;
+            background-color: #dff0d8;
+            margin-bottom: 10px;
+        }
+        #container-2 {
+            border: 1px solid red;
+            padding: 5px;
+            margin: 10px 5px;
+        }
+    </style>
+</head>
+<body>
+
+<ol id="list">
+    <li>0</li>
+    <li>2</li>
+    <li>3</li>
+</ol>
+
+
+<div id="container"></div>
+
+<div id="container-2">
+    <ul>
+        <li>Животные
+            <ul>
+                <li>Млекопитающие
+                    <ul>
+                        <li>Коровы</li>
+                        <li>Ослы</li>
+                        <li>Собаки</li>
+                        <li>Тигры</li>
+                    </ul>
+                </li>
+                <li>Другие
+                    <ul>
+                        <li>Змеи</li>
+                        <li>Птицы</li>
+                        <li>Ящерицы</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>Рыбы
+            <ul>
+                <li>Аквариумные
+                    <ul>
+                        <li>Гуппи</li>
+                        <li>Скалярии</li>
+                    </ul>
+
+                </li>
+                <li>Морские
+                    <ul>
+                        <li>Морская форель</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div id="cal"></div>
+
+<div class="last-div"> last-div </div>
+
+<script src="../lodash.min.js"></script>
+<script>
+    let div = document.createElement("div");
+    div.className = "alert alert-success";
+    div.innerHTML = "<strong>Ура!</strong> Вы прочитали это важное сообщение.";
+    document.body.appendChild(div);
+    // --------------------------------------------------------
+    let divClone = div.cloneNode(true);
+    divClone.appendChild( document.createTextNode("<strong>Whohoo!</strong> I'm clone."));
+    div.parentNode.insertBefore(divClone, div.nextSibling);
+
+    // remove ------------------------------------------------------------------------
+    if (!Element.prototype.remove) {
+        Element.prototype.remove = function () {
+            if (this.parentNode) {
+                this.parentNode.removeChild(this);
+            }
+        }
+    }
+
+    divClone.remove();
+
+    // insertAfter ------------------------------------------------------------------------
+    if (!Element.prototype.insertAfter) {
+        Element.prototype.insertAfter = function (refElem) {
+            let nextEl = refElem.nextSibling,
+                parentEl = refElem.parentNode;
+            parentEl.insertBefore(this, nextEl);
+        }
+    }
+
+    let ol = document.querySelector("#list");
+    let testEl = document.createElement("span");
+    testEl.textContent = "Blablabla";
+    // testEl.insertAfter(ol);
+    testEl.insertAfter(document.querySelector("#list li:last-child"));
+
+
+    // removeChildren ------------------------------------------------------------------------
+    if (!Element.prototype.removeChildren) {
+        Element.prototype.removeChildren = function () {
+            try {
+                this.innerHTML = "";
+            } catch (e) {
+                while (this.lastChild) {
+                    this.removeChild(this.lastChild);
+                }
+            }
+        }
+    }
+
+    setTimeout(()=>{ ol.removeChildren() }, 2000);
+
+    // Создать список ------------------------------------------------------------------------
+    let newUl = document.createElement("ul");
+    newUl.insertAfter(document.querySelector("#list"));
+    /*while (true) {
+        let res = prompt("Новый пункт", "");
+        if (!res || res === "") break;
+        let li = document.createElement("li");
+        li.textContent = res;
+        newUl.appendChild(li);
+    }*/
+
+    //Создайте дерево из объекта ------------------------------------------------------------------------
+    let data = {
+        "Рыбы": {
+            "Форель": {},
+            "Щука": {}
+        },
+        "Деревья": {
+            "Хвойные": {
+                "Лиственница": {},
+                "Ель": {}
+            },
+            "Цветковые": {
+                "Берёза": {},
+                "Тополь": {}
+            }
+        }
+    };
+
+    let container = document.getElementById('container');
+    createTree(container, data);
+    
+    function createTree(container, data) {
+        let ul = document.createElement("ul");
+
+        for (let k in data) {
+            let li = document.createElement("li");
+            li.textContent = k;
+            ul.appendChild(li);
+            if (Object.keys(data[k]).length !== 0) createTree(ul, data[k]);
+            container.appendChild(ul);
+        }
+    }
+
+    // Tree
+    function treeCount(container) {
+
+    }
+    treeCount(document.querySelector("#container-2"));
+
+
+    // Создать календарь в виде таблицы ------------------------------------------------------------------------
+    function Calendar({id="cal", year=new Date().getFullYear(), month = new Date().getMonth()+1, day = 1, thead: theadCSS = {}, tbody: tbodyCSS = {}} = {}) {
+        let date = new Date(year, month-1, day, 0, 0, 0),
+            arr = [],
+            weekNames = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВСК" ];
+        
+        this.create = function () {
+            fillArray();
+            build();
+        };
+
+        function fillArray() {
+            outer:
+            for (let week = 0; week < weeksCount(); week+=1) {
+                arr[week] = [];
+                inner:
+                for (let td = 1; td <= 7; td += 1) {
+                    if ((week === 0 && td < dayOfTheWeek(date)) || (date.getMonth()+1 !== month)) {
+                        arr[week][td-1] = "";
+                        continue inner;
+                    }
+                    arr[week][td-1] = date.getDate();
+                    date.setDate(date.getDate() + 1);
+                }
+            }
+        }
+
+        function build() {
+            let container = document.getElementById(id);
+            let table = document.createElement("table");
+
+            buildTHEAD(table);
+            buildTBODY(table);
+
+            table.style.borderCollapse = "collapse";
+            table.style.border = "1px solid #c6c6c6";
+            container.appendChild(table);
+        }
+
+        function buildTHEAD(table) {
+            let theadTR = document.createElement("tr"),
+                thead = document.createElement("thead");
+            
+            for (let weeks = 0; weeks < 7; weeks +=1) {
+                let theadTH = document.createElement("th");
+                theadTH.textContent = weekNames[weeks];
+                theadTR.appendChild(theadTH);
+            }
+
+            thead.appendChild(theadTR);
+            theadStyling(thead);
+            table.appendChild(thead);
+        }
+
+        function theadStyling(thead){
+            if (Object.keys(theadCSS).length === 0) return false;
+            for (let prop in theadCSS) {
+                thead.style[prop] = theadCSS[prop];
+            }
+            return true;
+        }
+
+        function buildTBODY(table) {
+            let tbody = document.createElement("tbody");
+
+            arr.forEach((weekArr, weekIndex)=>{
+                let tr = document.createElement("tr");
+                weekArr.forEach((day, dayIndex)=>{
+                    let td = document.createElement("td");
+                    td.textContent = day;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+
+            tbodyStyling(tbody);
+            table.appendChild(tbody);
+        }
+
+        function tbodyStyling(tbody){
+            if (Object.keys(tbodyCSS).length === 0) return false;
+            for (let prop in tbodyCSS) {
+                tbody.style[prop] = tbodyCSS[prop];
+            }
+            return true;
+        }
+
+        function dayCount() {
+            let tmpDate = _.cloneDeep(date);
+            tmpDate.setMonth(tmpDate.getMonth() + 1);
+            tmpDate.setDate(0);
+            return tmpDate.getDate();
+        }
+
+        function weeksCount() {
+            return Math.ceil(dayCount() / 7);
+        }
+
+        function dayOfTheWeek(date){
+            return (date.getDay() === 0) ? 7 : date.getDay();
+        }
+
+    }
+
+
+    let calOptions = {
+        id: "cal",
+        year: 2012,
+        month: 5,
+        thead:{
+            background: "#000",
+            color: "#fff",
+        },
+        tbody:{
+            background: "#fff",
+            color: "#000"
+        },
+        
+    };
+
+    let calendar = new Calendar(calOptions);
+    calendar.create();
+
+
+</script>
+
+
+
+</body>
+</html>
