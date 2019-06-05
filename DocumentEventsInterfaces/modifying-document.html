@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .alert {
+            padding: 15px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            color: #3c763d;
+            background-color: #dff0d8;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<ol id="list">
+  <li>0</li>
+  <li>2</li>
+  <li>3</li>
+</ol>
+
+<div class="last-div"> last-div </div>
+
+<script>
+    let div = document.createElement("div");
+    div.className = "alert alert-success";
+    div.innerHTML = "<strong>Ура!</strong> Вы прочитали это важное сообщение.";
+    document.body.appendChild(div);
+
+    let ol = document.getElementById("list");
+    let li = document.createElement("li");
+    li.textContent = "4";
+    setTimeout(()=>{ol.appendChild(li)}, 1000); // Добавит в конец
+    // --------------------------------------------------------
+    let li2 = li.cloneNode(true);
+    li2.textContent = "1";
+    setTimeout(()=>{ol.insertBefore(li2, document.querySelector("#list li:nth-child(2)"))}, 1400); // Добавит перед 2 Li
+    // --------------------------------------------------------
+    let divClone = div.cloneNode(true);
+    // divClone.innerHTML = "<strong>Whohoo!</strong> I'm clone.";
+    divClone.appendChild( document.createTextNode("<strong>Whohoo!</strong> I'm clone."));
+    div.parentNode.insertBefore(divClone, div.nextSibling);
+    // setTimeout(()=>{div.parentNode.removeChild(divClone)}, 1000);
+
+
+
+
+</script>
+
+</body>
+</html>
