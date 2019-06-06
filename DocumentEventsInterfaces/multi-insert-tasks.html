@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        table tr td, table tr th {
+            border: 1px solid #c6c6c6;
+            padding: 5px 7px;
+            text-align: center;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+
+<ul id="task-1">
+    <li>1</li>
+    <li>2</li>
+</ul>
+
+<table>
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Отчество</th>
+            <th>Возраст</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Вася</td>
+            <td>Петров</td>
+            <td>Александрович</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>Петя</td>
+            <td>Иванов</td>
+            <td>Петрович</td>
+            <td>15</td>
+        </tr>
+        <tr>
+            <td>Владимир</td>
+            <td>Ленин</td>
+            <td>Ильич</td>
+            <td>9</td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    // Вставьте элементы в конец списка
+    let li = "<li>3</li><li>4</li><li>5</li>";
+    document.querySelector("ul#task-1 li:last-child").insertAdjacentHTML("afterEnd", li);
+
+    // Отсортировать таблицу
+    // https://codepen.io/sundaykiller/pen/wbbQwQ
+    class SortTable {
+        constructor(tableSelector){
+            this.table = tableSelector;
+            this.tbody = this.table.querySelector("tbody");
+            this.rows = this.tbody.querySelectorAll("tr");
+            this.arr = [];
+        }
+
+        byAge(){
+            for (let row = 0; row < this.rows.length; row++) {
+                let item = this.rows[row];
+                this.arr[row] = {
+                    tr: item,
+                    age: +item.querySelector("td:last-child").textContent,
+                };
+            }
+            this.arr.sort((a,b)=>a.age - b.age);
+            this.render();
+        }
+
+        clear(){
+            while (this.tbody.lastChild) {
+                this.tbody.removeChild(this.tbody.lastChild);
+            }
+        }
+
+        render(){
+            this.clear();
+            let fragment = document.createDocumentFragment();
+            this.arr.forEach((value)=>{
+                fragment.appendChild(value.tr);
+            });
+            this.tbody.appendChild(fragment);
+        }
+
+    }
+
+    let sorting = new SortTable(document.querySelector("table"));
+    setTimeout(()=>sorting.byAge(), 1000);
+
+    // document.querySelector("table tbody").innerHTML = "";
+
+
+
+</script>
+
+</body>
+</html>
