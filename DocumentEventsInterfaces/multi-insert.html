@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<ul class="ul-1">
+    <li>1</li>
+    <li>2</li>
+    <li>5</li>
+</ul>
+
+<script>
+    let li = [],
+        k = 3,
+        fragment = document.createDocumentFragment();
+
+    while (k < 5) {
+        let li = document.createElement("li");
+        li.textContent = k.toString();
+        fragment.appendChild(li);
+        // document.querySelector("ul li:last-child").insertAdjacentElement("beforeBegin", li);
+        k++;
+    }
+
+    // document.querySelector("ul.ul-1").insertBefore(fragment, document.querySelector("ul li:last-child"));
+
+
+
+    // -------  append/prepend, before/after, replaceWith -------
+
+        // --- https://cdn.polyfill.io/v1/polyfill.js?features=Element.prototype.append,Element.prototype.after - polyfill
+
+        // document.querySelector("ul.ul-1 li:nth-child(2)").after(fragment);
+        // document.querySelector("ul.ul-1 li:last-child").before(fragment);
+        document.querySelector("ul.ul-1 li:last-child").append(" 6 7");
+        let newLi = document.createElement("li");
+        newLi.innerHTML = "<b>5</b>";
+        document.querySelector("ul.ul-1 li:last-child").replaceWith(newLi);
+
+
+
+
+</script>
+
+</body>
+</html>
