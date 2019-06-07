@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body {
+        min-height: 1000px;
+    }
+</style>
+<body>
+
+<script>
+
+    // Скругленая кнопка со стилями из JavaScript
+    let a = document.createElement("a");
+    a.setAttribute("href", "/");
+    a.setAttribute("class", "button");
+    a.textContent = "Нажми меня";
+    a.style.cssText = " -moz-border-radius: 8px;\n" +
+        "    -webkit-border-radius: 8px;\n" +
+        "    border-radius: 8px;\n" +
+        "    border: 2px groove green;\n" +
+        "    display: block;\n" +
+        "    height: 30px;\n" +
+        "    line-height: 30px;\n" +
+        "    width: 100px;\n" +
+        "    text-decoration: none;\n" +
+        "    text-align: center;\n" +
+        "    color: red;\n" +
+        "    font-weight: bold;";
+
+    document.body.appendChild(a);
+
+
+    // Создать уведомление
+    /**
+     * Показывает уведомление, пропадающее через 1.5 сек
+     *
+     * @param options.top {number} вертикальный отступ, в px
+     * @param options.right {number} правый отступ, в px
+     * @param options.cssText {string} строка стиля
+     * @param options.className {string} CSS-класс
+     * @param options.html {string} HTML-текст для показа
+     */
+
+    function showNotification(options) {
+        let notyDiv = document.createElement("div");
+
+        let top = (options.top !== undefined) ? (typeof options.top === "number") ? options.top + "px" : options.top : "5px",
+            right = (options.right !== undefined) ? (typeof options.right === "number") ? options.right + "px" : options.right : "5px";
+
+        notyDiv.textContent = (options.html !== undefined ) ? options.html : "";
+        notyDiv.style.position = "fixed";
+        notyDiv.style.top = top;
+        notyDiv.style.right = right;
+        notyDiv.setAttribute("class", (options.className !== undefined) ? options.className : "");
+        document.body.appendChild(notyDiv);
+        setTimeout(()=>notyDiv.parentNode.removeChild(notyDiv), 1500);
+    }
+
+    showNotification({
+        top: 10,
+        right: 10,
+        backgroundColor: "#f6f6f6",
+        Color: "#000",
+        html: "Привет",
+        className: "welcome"
+    });
+
+</script>
+
+</body>
+</html>
