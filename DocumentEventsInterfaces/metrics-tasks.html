@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #example {
+            width: 300px;
+            height: 200px;
+            border: 25px solid #E8C48F; /* рамка 25px */
+            padding: 20px; /* поля 20px */
+            overflow: auto; /* прокрутка */
+        }
+        #moving-div {
+            border: 5px groove green;
+            padding: 5px;
+            margin: 10px;
+            background-color: yellow;
+        }
+        #elem {
+            width: 200px;
+            height: 150px;
+            background-color: red;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        body {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="example" style="display: none;">
+    Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона, а также реальное распределение букв и пробелов в абзацах, которое не получается при простой дубликации "Здесь ваш текст.. Здесь ваш текст.. Здесь ваш текст.." Многие программы электронной вёрстки и редакторы HTML используют Lorem Ipsum в качестве текста по умолчанию, так что поиск по ключевым словам "lorem ipsum" сразу показывает, как много веб-страниц всё ещё дожидаются своего настоящего рождения. За прошедшие годы текст Lorem Ipsum получил много версий. Некоторые версии появились по ошибке, некоторые - намеренно (например, юмористические варианты).
+</div>
+
+Before Before Before
+
+<div id="moving-div">
+    Text Text Text<br>
+    Text Text Text<br>
+</div>
+
+After After After
+
+<div id="elem">
+    текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст
+    текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст
+    текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст текст
+    текст текст
+</div>
+
+<script>
+    // Найти размер прокрутки снизу
+    function scrollBottom(elem) {
+        return elem.scrollHeight - elem.scrollTop - elem.clientHeight;
+    }
+
+    // Узнать ширину полосы прокрутки
+    function scrollBarWidth() {
+        let div = document.createElement("div");
+        div.style.width = "50px";
+        div.style.height = "50px";
+        div.style.overflowY = "scroll";
+        div.style.visibility = "hidden";
+        document.body.appendChild(div);
+        let scrollWidth = div.offsetWidth - div.clientWidth;
+        document.body.removeChild(div);
+        return scrollWidth;
+    }
+    // console.log( scrollBarWidth() );
+
+
+    // Подменить div на другой с таким же размером
+    let div = document.getElementById('moving-div');
+    div.style.position = 'absolute';
+    div.style.right = div.style.top = 0;
+    let newDiv = document.createElement("div");
+    newDiv.style.height = div.offsetHeight + "px";
+    newDiv.style.width = div.offsetWidth + "px";
+
+    newDiv.style.backgroundColor = "#c5c5c5";
+    newDiv.style.margin = getComputedStyle(div)["margin"];
+    div.insertAdjacentElement("afterEnd", newDiv);
+
+    // Расширить элемент
+    let elem = document.getElementById("elem");
+    elem.style.height = elem.scrollHeight - elem.clientTop + "px";
+    
+</script>
+
+</body>
+</html>
