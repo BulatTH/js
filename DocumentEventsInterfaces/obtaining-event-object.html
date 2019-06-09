@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button id="btn"> Button </button>
+
+<script>
+    
+    btn.onclick = function (event) {
+        console.log( event.type );
+        console.log( event.currentTarget );
+        console.log( event.clientX );
+        console.log( event.clientY );
+    }
+
+    element.onclick = function(event) {
+        event = event || window.event; // (*)
+        // Теперь event - объект события во всех браузерах.
+    };
+
+</script>
+
+</body>
+</html>
