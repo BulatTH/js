@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .task-1 #field {
+            width: 200px;
+            height: 150px;
+            border: 10px groove black;
+            background-color: #00FF00;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .task-1 #ball {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -20px;
+            margin-top: -20px;
+            transition: .4s all;
+        }
+    </style>
+</head>
+<body>
+
+<div style="min-height: 400px;"></div>
+
+<div class="task-1">
+    Кликните на любое место поля, чтобы мяч перелетел туда.
+    <br> Мяч никогда не вылетит за границы поля.
+
+
+    <div id="field">
+        <img src="https://js.cx/clipart/ball.svg" id="ball"> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    </div>
+
+</div>
+
+<script>
+    (function task1() {
+        field.onclick = function (e) {
+            e = e || window.event;
+            let fieldCoordinates = this.getBoundingClientRect(),
+                borderTopSize = this.clientTop,
+                borderLeftSize = this.clientLeft,
+                ballHeight = ball.offsetHeight,
+                ballWidth = ball.offsetWidth;
+
+            let fieldTopCoord = fieldCoordinates.top + borderTopSize;
+            let fieldLeftCoord = fieldCoordinates.left + borderLeftSize;
+
+            let ballTopCoordinates =  e.clientY - fieldTopCoord;
+            let ballLeftCoordinates = e.clientX - fieldLeftCoord;
+
+            // мяч вылазит за верхнуюю рамку
+            if (e.clientY - fieldTopCoord < ballHeight / 2) {
+                ballTopCoordinates = ballHeight / 2;
+            }
+
+            // мяч вылазит за правую рамку
+            if (e.clientX - fieldLeftCoord < ballWidth / 2) {
+                ballLeftCoordinates = ballWidth / 2;
+            }
+
+            // мяч вылазит за нижнюю рамку
+            if (e.clientY + borderTopSize + ballHeight / 2 > fieldCoordinates.bottom) {
+                ballTopCoordinates = fieldCoordinates.bottom + borderTopSize - fieldTopCoord - ballHeight;
+            }
+
+            // мяч вылазит за левую рамку
+            if (e.clientX + borderLeftSize + ballWidth / 2 > fieldCoordinates.right) {
+                ballLeftCoordinates = fieldCoordinates.right + borderLeftSize - fieldLeftCoord - ballWidth;
+            }
+
+
+            ball.style.top = ballTopCoordinates + "px";
+            ball.style.left = ballLeftCoordinates + "px";
+
+        }
+    })();
+
+</script>
+
+</body>
+</html>
