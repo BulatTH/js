@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="buttonsWrapper">
+    <button data-action="save"> Save </button>
+    <button data-action="load"> Load </button>
+</div>
+
+<script>
+
+    function Menu(elem) {
+        this.save = function () {
+            console.log( "Save button was clicked" )
+        };
+
+        this.load = function () {
+            console.log( "Load button was clicked" )
+        };
+
+        let self = this;
+        elem.onclick = function (e) {
+            e = e || window.event;
+            let target = e.target;
+            let action = target.dataset.action;
+            if (action && self[action]) {
+                self[action]();
+            }
+        }
+
+    }
+    new Menu(buttonsWrapper);
+</script>
+
+</body>
+</html>
