@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        blockquote {
+            background: #f9f9f9;
+            border-left: 10px solid #ccc;
+            margin: 0 0 0 100px;
+            padding: .5em 10px;
+            quotes: "\201C""\201D""\2018""\2019";
+            display: inline-block;
+            white-space: pre;
+        }
+
+        blockquote:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: .1em;
+            margin-right: .25em;
+            vertical-align: -.4em;
+        }
+    </style>
+</head>
+<body>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae
+    esse sequi officia sapiente.</p>
+
+
+<blockquote>
+    - Что на завтрак, Бэрримор?
+    - Овсянка, сэр.
+    - А на обед?
+    - Овсянка, сэр.
+    - Ну а на ужин?
+    - Котлеты, сэр.
+    - Уррра!!!
+    - Из овсянки, сэр!!!
+</blockquote>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit sint atque dolorum fuga ad incidunt voluptatum error fugiat animi amet! Odio temporibus nulla id unde quaerat dignissimos enim nisi rem provident molestias sit tempore omnis recusandae
+    esse sequi officia sapiente.</p>
+
+
+<script>
+    /**
+     * Позиционирует элемент elem относительно элемента anchor, как указано в
+     * в position.
+     *
+     * @param {Node} anchor     Элемент-якорь, относительно которого задана позиция
+     * @param {string} position Позиция: одно из top/right/bottom
+     * @param {Node} elem       Элемент, который будет позиционирован
+     */
+    function positionAt(anchor, position, elem) {
+        // ваш код...
+    }
+
+    /**
+     * Показывает заметку с текстом html на позиции position
+     * относительно элемента anchor
+     */
+    function showNote(anchor, position, html) {
+        let coord = anchor.getBoundingClientRect();
+        let note = document.createElement("div");
+        note.style.cssText =    "min-width: 100px;" +
+                                "max-width: 200px;" +
+                                "min-height: 20px;" +
+                                "display: inline-block;" +
+                                "padding: 4px 6px;" +
+                                "border: 1px solid #c6c6c6; " +
+                                "text-align: center; " +
+                                "position: absolute;";
+        note.textContent = html;
+        document.body.appendChild(note);
+        if (position.toLowerCase() === "top") {
+            note.style.top = coord.top - note.offsetHeight + "px";
+            note.style.left = coord.left + "px";
+        } else if (position.toLowerCase() === "right") {
+            note.style.top = coord.top + "px";
+            note.style.left = coord.right + "px";
+        } else if (position.toLowerCase() === "bottom") {
+            note.style.top = coord.bottom + "px";
+            note.style.left = coord.left + "px";
+        } else {
+            document.body.removeChild(note);
+        }
+    }
+
+    // проверка работоспособности
+    let blockquote = document.querySelector('blockquote');
+
+    showNote(blockquote, "top", "заметка сверху");
+    showNote(blockquote, "right", "заметка справа ");
+    showNote(blockquote, "bottom", "заметка снизу");
+</script>
+
+
+</body>
+</html>
