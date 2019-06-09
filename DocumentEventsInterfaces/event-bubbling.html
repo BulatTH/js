@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .first {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .second {
+            width: 50px;
+            height: 50px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="first" onclick="f1(event)">
+    <div class="second" onclick="f2(event)">
+
+    </div>
+</div>
+
+<div class="first" id="block1">
+    <div class="second" id="block11">
+
+    </div>
+</div>
+
+
+<script>
+    function f1(self) {
+        // console.log( `currentTarget: ${self.currentTarget.classList}; target: ${self.target.classList}; ` );
+        console.log( "first" );
+    }
+    function f2(self) {
+        // console.log( `currentTarget: ${self.currentTarget.classList}; target: ${self.target.classList}; ` );
+        console.log( "second" );
+        self.stopPropagation();
+    }
+    
+    function f21() {
+        console.log( "first" )
+    }
+    
+    function f211() {
+        console.log( "second" )
+    }
+    
+    block1.addEventListener("click", f21, true); // погружение
+    // block1.addEventListener("click", f21, false); // всплытие
+    block11.addEventListener("click", f211, true); // погружение
+    // block11.addEventListener("click", f211, false); // всплытие
+
+</script>
+
+</body>
+</html>
