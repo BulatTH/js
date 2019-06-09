@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .blocks {
+            border: 1px solid #c4c4c4;
+            padding: 5px;
+            margin: 20px 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div style="position: relative; min-height: 100px;">
+    <button style="position: absolute; top: 50px; left: 123px;" onclick="console.log( this.getBoundingClientRect() )"> Click me! </button>
+</div>
+
+<div class="blocks">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis eum fugiat quia similique
+    veritatis! Aliquid odio, ut! Adipisci cum et facilis placeat veritatis? Eius et excepturi expedita mollitia nobis,
+    odio perferendis. Ab, aliquid atque cum cupiditate eius perspiciatis quos recusandae?
+</div>
+<div class="blocks">Asperiores aut doloremque eveniet ipsa nisi reiciendis, rerum temporibus! Consequatur, dolore,
+    dolorem? Cupiditate earum eum facere fuga ipsum iusto, laboriosam minima praesentium quasi quisquam! Eius molestiae
+    sit unde voluptatibus? Ab doloribus eaque inventore itaque libero mollitia natus odit sapiente! Dignissimos.
+</div>
+<div class="blocks">Alias aliquid consequuntur cumque distinctio fugiat ipsam, quod tempora. Aliquid, expedita,
+    sapiente? Aperiam aspernatur dolores est libero nemo nostrum repellendus sequi! A, accusamus, amet aut, ex fugiat
+    fugit ipsam maxime mollitia non obcaecati quos ratione sint tenetur? Enim, ipsum, quisquam.
+</div>
+<div class="blocks">Ab animi asperiores atque aut commodi consequatur dicta dolorum eligendi excepturi facere fuga,
+    laborum nisi nobis nostrum pariatur perspiciatis placeat possimus quia quibusdam repellendus reprehenderit, rerum
+    saepe tempore, totam ut vero voluptatum. Dolores inventore minima necessitatibus, perferendis sint suscipit
+    voluptatibus.
+</div>
+<div class="blocks">Aspernatur aut blanditiis dicta dignissimos distinctio dolor doloremque doloribus ea eaque, eius
+    explicabo illo incidunt iure libero magnam minus molestiae mollitia necessitatibus nobis non officiis optio quaerat
+    quia, quidem reprehenderit saepe sapiente sunt suscipit veniam vero? Consequuntur dolorem officia veritatis?
+</div>
+<div class="blocks">Accusantium ad alias animi commodi corporis dolor eos ex facilis ipsa itaque laborum laudantium
+    maxime modi molestias nihil nisi, perferendis quae quis repellat rerum sapiente, sed sint sunt temporibus unde ut
+    voluptatum! Assumenda consectetur facere laboriosam quod sed tempora velit?
+</div>
+<div class="blocks">Accusamus aliquam, at consectetur delectus deserunt doloribus ducimus eveniet excepturi
+    exercitationem facere illum in incidunt ipsum labore laudantium nam neque nesciunt nihil obcaecati odio omnis quae
+    quam, quas quisquam quo quos ratione rerum sapiente tempore tenetur unde velit, vitae voluptate?
+</div>
+<div class="blocks">A ab aliquam, autem commodi culpa dicta dolor est id inventore ipsam magnam, modi natus non optio
+    quis rem sequi voluptate! Beatae consectetur excepturi laboriosam temporibus vel? A, accusantium beatae delectus
+    deleniti esse illum nobis non rem rerum unde veniam!
+</div>
+<div class="blocks">Aspernatur, enim exercitationem ipsum neque placeat velit? Aliquid deserunt enim minus, possimus
+    provident quas tempora. Asperiores at autem dolorum esse est ex inventore laboriosam maiores minus natus nisi odio
+    quaerat quam quisquam, ratione suscipit tenetur totam! Id rerum tenetur voluptatibus.
+</div>
+<div class="blocks">Accusantium aliquid delectus deleniti doloremque dolores ducimus eaque error et illo illum,
+    molestiae nemo, pariatur, placeat possimus quam quod repellat sequi sunt? Accusantium ad adipisci aliquid aspernatur
+    commodi cum dolore eaque ex illo officia omnis optio, repellat sit temporibus, velit.
+</div>
+
+<script>
+    let coordX = 123;
+    let coordY = 51;
+    let element = document.elementFromPoint(coordX, coordY);
+    console.log( element );
+
+    setTimeout(()=>{
+        let x = document.documentElement.clientWidth / 2;
+        let y = document.documentElement.clientHeight / 2;
+        let el = document.elementFromPoint(x, y);
+        console.log( el );
+        el.style.borderColor = 'red';
+    }, 1000);
+
+</script>
+
+</body>
+</html>
