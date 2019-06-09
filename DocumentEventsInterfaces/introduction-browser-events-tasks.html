@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .task-3 ul {
+            /*display: none;*/
+        }
+        .task-3 .task-3-button span {
+            font-size: 12px;
+            color: green;
+        }
+
+        .task-3-button {
+            display: inline-block;
+        }
+
+        .task-3-button:before {
+            content: '▼';
+            color: green;
+            font-size: 12px;
+        }
+
+        .task-3-button > ul {
+            display: none;
+        }
+
+        .task-3-button.open:before {
+            content: '▶';
+            color: green;
+            font-size: 12px;
+        }
+
+        .task-3-button.open > ul {
+            display: block;
+        }
+
+        .remove-button{
+            display: none;
+        }
+
+        .task-4 h3 {
+            margin: 0;
+            padding-bottom: .3em;
+            font-size: 1.1em;
+            padding-right: 15px;
+        }
+
+        .task-4 p {
+            margin: 0;
+            padding: 0 0 .5em;
+        }
+
+        .task-4 .pane {
+            background: #edf5e1;
+            padding: 10px 20px 10px;
+            border-top: solid 2px #c4df9b;
+            position: relative;
+        }
+
+        .task-4 .remove-button {
+            font-size: 110%;
+            color: darkred;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            display: block;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="task-1">
+    <button class="button"> Hide text </button>
+    <div id="text"> Text... </div>
+</div>
+
+<div class="task-2">
+    <button class="self-disappear"> Self Disappearing Button </button>
+</div>
+
+
+<div class="task-3" style="margin: 10px 0;">
+    <!--<span class="task-3-button"> <span>▼</span> Сладости (нажми меня)!</span>
+    <ul>
+        <li>Торт</li>
+        <li>Пончик</li>
+        <li>Пирожное</li>
+    </ul>-->
+
+    <div class="task-3-button">
+        Сладости (нажми меня)!
+        <ul>
+            <li>Торт</li>
+            <li>Пончик</li>
+            <li>Пирожное</li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="task-4">
+
+
+    <div>
+        <div class="pane">
+            <button class="remove-button">[x]</button>
+            <h3>Лошадь</h3>
+            <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошади, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
+        </div>
+        <div class="pane">
+            <button class="remove-button">[x]</button>
+            <h3>Осёл</h3>
+            <p>Домашний осёл или ишак — одомашненный подвид дикого осла, сыгравший важную историческую роль в развитии хозяйства и культуры человека. Все одомашненные ослы относятся к африканским ослам.</p>
+        </div>
+        <div class="pane">
+            <button class="remove-button">[x]</button>
+            <h3>Корова, а также пара слов о диком быке, о волах и о тёлках. </h3>
+            <p>Коро́ва — самка домашнего быка, одомашненного подвида дикого быка, парнокопытного жвачного животного семейства полорогих. Самцы вида называются быками, молодняк — телятами, кастрированные самцы — волами. Молодых (до первой стельности) самок называют
+                тёлками.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector(".button").addEventListener("click", function () {
+        text.style.visibility = "hidden";
+    });
+    
+    document.querySelector(".self-disappear").addEventListener("click", function () {
+        this.style.visibility = "hidden";
+    });
+
+    /*let clickCounter = 0;
+    document.querySelector(".task-3-button").addEventListener("click", function () {
+        let arrow = this.getElementsByTagName("span")[0];
+        if (clickCounter % 2 === 0) {
+            document.querySelector(".task-3 ul").style.display = "block";
+            arrow.textContent = "▶";
+        } else {
+            document.querySelector(".task-3 ul").style.display = "none";
+            arrow.textContent = "▼";
+        }
+        clickCounter++;
+    });*/
+
+    document.querySelector(".task-3-button").addEventListener("click", function () {
+        this.classList.toggle("open")
+    });
+    
+    (function task4() {
+        let items = document.querySelectorAll(".pane");
+
+        for (let a = 0; a < items.length; a++) {
+            let item = items[a];
+            item.querySelector("button").addEventListener("click", hide);
+        }
+        
+        function hide() {
+            this.parentNode.style.display = "none";
+        }
+        
+    })();
+    
+</script>
+
+</body>
+</html>
