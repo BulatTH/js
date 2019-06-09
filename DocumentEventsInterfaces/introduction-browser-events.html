@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<button onclick="f1(this)"> Click me </button>
+
+<button id="button"> MouseOver </button>
+
+<button class="button-1"> AddEventListener </button>
+
+<script>
+    function f1(self) {
+        console.log( self.innerHTML );
+    }
+
+    
+    button.onmouseover = function () {
+        console.log( "onmouserover event on #button" );
+    };
+
+    let elem = document.querySelector(".button-1");
+    elem.addEventListener("click", f2);
+
+    function f2() {
+        console.log( ".button-1 click" )
+    }
+
+    setTimeout(()=>{
+        elem.removeEventListener("click", f2);
+        console.log( "Event Listener was removed for .button-1" )
+    }, 3000);
+
+</script>
+
+</body>
+</html>
