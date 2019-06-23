@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .tasks {
+            margin: 10px 5px;
+            border: 1px solid #c6c6c6;
+            padding: 5px;
+        }
+        .task-1 {
+            min-height: 700px;
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 5px 8px;
+            border: 1px solid #c7c7c7;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            top: 0;
+            left: 0;
+            background: #000000;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="tasks task-1">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam, praesentium.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur </p>
+    <button data-tooltip="подсказка длиннее, чем элемент">Короткая кнопка</button>
+    <button data-tooltip="HTML<br>подсказка">Ещё кнопка</button>
+    <p>Lorem ipsum dolor sit amet, consectetur </p>
+</div>
+
+
+<script>
+    let tooltip;
+
+    document.addEventListener("mouseover", function (e) {
+        if (!e.target.hasAttribute("data-tooltip")) return;
+        let coord = e.target.getBoundingClientRect(),
+            text = e.target.getAttribute("data-tooltip");
+
+        tooltip = document.createElement("div");
+        tooltip.innerHTML = text;
+        tooltip.classList.add("tooltip");
+
+        e.target.parentNode.appendChild(tooltip);
+
+        let height = tooltip.offsetHeight,
+            width = tooltip.offsetWidth;
+
+
+        let maxLeftPos = (e.target.parentNode.getBoundingClientRect()["left"] + 2),
+            leftPos = (getCoords(e.target)["left"] + e.target.offsetWidth / 2) - (width / 2);
+
+        let topPos = (coord.top - height - 8 > 0) ? (getCoords(e.target)["top"] - height - 5) : (getCoords(e.target)["top"] + e.target.offsetHeight + 4);
+
+        tooltip.style.top = (topPos) + "px";
+        tooltip.style.left = Math.max(maxLeftPos, leftPos) + "px";
+    });
+
+
+    document.addEventListener("mouseout", function (e) {
+        if (!e.target.hasAttribute("data-tooltip")) return;
+        tooltip.parentNode.removeChild(tooltip);
+    });
+
+    function getCoords(elem) {
+        // (1)
+        var box = elem.getBoundingClientRect();
+
+        var body = document.body;
+        var docEl = document.documentElement;
+
+        // (2)
+        var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+        // (3)
+        var clientTop = docEl.clientTop || body.clientTop || 0;
+        var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+        // (4)
+        var top = box.top + scrollTop - clientTop;
+        var left = box.left + scrollLeft - clientLeft;
+
+        return {
+            top: top,
+            left: left
+        };
+    }
+
+</script>
+
+</body>
+</html>
