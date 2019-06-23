@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .pane-wrapper {
+            max-width: 500px;
+            width: 95%;
+            margin: 10px auto;
+        }
+
+        h3 {
+            margin: 0;
+            padding-bottom: .3em;
+            font-size: 1.1em;
+            padding-right: 15px;
+        }
+
+        p {
+            margin: 0;
+            padding: 0 0 .5em;
+        }
+
+        .pane {
+            background: #edf5e1;
+            padding: 10px 20px 10px;
+            border-top: solid 2px #c4df9b;
+            position: relative;
+        }
+
+        .remove-button {
+            font-size: 110%;
+            color: darkred;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            position: absolute;
+            top: 5px;
+        }
+
+
+        /* Task-2 */
+        .tree-wrapper li span.have-list {
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tree-wrapper li span.have-list:hover {
+            text-decoration: underline;
+        }
+
+        .tree-wrapper li {
+            color: #3b3b3b;
+            cursor: default;
+            font-weight: normal;
+        }
+
+
+        /* Task-3 */
+        table {
+            border-collapse: collapse;
+        }
+
+        table tr td, table tr th  {
+            border: 1px solid #c6c6c6;
+            padding: 5px;
+            font-weight: normal;
+            min-width: 65px;
+        }
+
+        table tr th {
+            background-color: #f5ffdd;
+        }
+        
+        table tr th:hover {
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+<div class="pane-wrapper">
+    <div class="pane">
+        <button class="remove-button">[x]</button>
+        <h3>Лошадь</h3>
+        <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошади, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
+    </div>
+    <div class="pane">
+        <button class="remove-button">[x]</button>
+        <h3>Осёл</h3>
+        <p>Домашний осёл или ишак — одомашненный подвид дикого осла, сыгравший важную историческую роль в развитии хозяйства и культуры человека. Все одомашненные ослы относятся к африканским ослам.</p>
+    </div>
+    <div class="pane">
+        <button class="remove-button">[x]</button>
+        <h3>Корова, а также пара слов о диком быке, о волах и о тёлках. </h3>
+        <p>Коро́ва — самка домашнего быка, одомашненного подвида дикого быка, парнокопытного жвачного животного семейства полорогих. Самцы вида называются быками, молодняк — телятами, кастрированные самцы — волами. Молодых (до первой стельности) самок называют
+            тёлками.
+        </p>
+    </div>
+</div>
+
+<div class="tree-wrapper"></div>
+
+<table id="grid">
+    <thead>
+        <tr>
+            <th data-type="number">Возраст</th>
+            <th data-type="string">Имя</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>5</td>
+            <td>Вася</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Петя</td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>Женя</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>Маша</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Илья</td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    document.querySelector(".pane-wrapper").addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-button")) {
+            let pane = e.target.closest(".pane");
+            pane.parentNode.removeChild(pane);
+        }
+    });
+
+
+    /* ------ Раскрывающееся дерево ------ */
+    let object = {
+        "Рыбы": {
+            "Форель": {},
+            "Щука": {}
+        },
+        "Деревья": {
+            "Хвойные": {
+                "Лиственница": {},
+                "Ель": {},
+                "Елочка": {
+                    "Елочка №1": {},
+                    "Елочка №2": {},
+                },
+            },
+            "Цветковые": {
+                "Берёза": {},
+                "Тополь": {}
+            }
+        }
+    };
+
+    let container = document.querySelector(".tree-wrapper");
+
+    function createTree(container, obj) {
+        let ul = document.createElement("ul");
+        for (let key in obj) {
+            let li = document.createElement("li");
+            let span = document.createElement("span");
+            span.textContent = key;
+            li.appendChild(span);
+            if (Object.keys(obj[key]).length !== 0) createTree(li, obj[key]);
+            ul.appendChild(li);
+        }
+
+        if (container.tagName === "LI" && container.childNodes[0] && container.childNodes[0].tagName === "SPAN") container.childNodes[0].classList.add("have-list");
+        container.appendChild(ul);
+    }
+
+    createTree(container, object);
+
+    container.addEventListener("click", function (e) {
+        if (e.target.nextSibling !== null && e.target.nextSibling.nodeName === "UL") {
+            e.target.nextSibling.hidden = !e.target.nextSibling.hidden;
+        }
+    });
+
+    /* ------ Сортировка таблицы ------ */
+    let tableThead = document.querySelector("table#grid thead");
+    
+    tableThead.addEventListener("click", function (e) {
+        if (e.target.tagName === "TH" && e.target.getAttribute("data-type")) {
+            let sortType = e.target.getAttribute("data-type"),
+                n = e.target.cellIndex,
+                tbody = this.parentNode.tBodies[0];
+
+            let tr = tbody.children,
+                trObj = [];
+
+            for (let a = 0; a < tr.length; a+=1) {
+                let tds = tr[a].children;
+                for (let b = 0; b < tds.length; b++) {
+                    if (!trObj[a]) trObj[a] = [];
+                    trObj[a][b] = tds[b].textContent;
+                }
+            }
+
+            if (sortType === "number") {
+                trObj = trObj.sort( (a,b) => +a[n] - +b[n]);
+            } else if (sortType === "string") {
+                // trObj = trObj.sort( (a,b) => (a[n] > b[n]) ? 1 : (b[n] > a[n]) ? -1 : 0);
+                trObj = trObj.sort( (a,b) => a[n].localeCompare(b[n]));
+            }
+
+            for (let a = 0; a < trObj.length; a+=1) {
+                let tr = document.createElement("tr");
+                for (let b = 0; b < trObj[a].length; b++) {
+                    let td = document.createElement("td");
+                    td.textContent = trObj[a][b];
+                    tr.appendChild(td);
+                }
+                tbody.replaceChild(tr, tbody.children[a]);
+            }
+
+        }
+    })
+
+</script>
+
+</body>
+</html>
