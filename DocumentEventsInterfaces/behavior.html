@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .examples {
+            margin: 10px 5px;
+            border: 1px solid #c6c6c6;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="examples example-1">
+    <button data-counter> 1 </button>
+
+    <button data-counter> 5 </button>
+</div>
+
+<div class="examples example-2">
+    <button data-toggle-id="form"> Hide/show form </button>
+    <form action="" id="form" hidden>
+        <input type="text" placeholder="email">
+        <button> Ok </button>
+    </form>
+</div>
+
+<script>
+    document.onclick = function (e) {
+        if (e.target.hasAttribute("data-counter")) {
+            let counter = e.target;
+            counter.innerHTML++;
+        }
+
+        if (e.target.hasAttribute("data-toggle-id")) {
+            let el = document.querySelector(`#${e.target.getAttribute('data-toggle-id')}`);
+            el.hidden = !el.hidden;
+        }
+    };
+
+
+</script>
+
+</body>
+</html>
