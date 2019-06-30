@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .task1__item {
+            cursor: pointer;
+        }
+        
+        .task1__item_clicked {
+            background-color: #97ff62;
+        }
+        .tree li {
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="task1">
+    <ul class="task1__list">
+        <li class="task1__item">Кристофер Робин</li>
+        <li class="task1__item">Винни-Пух</li>
+        <li class="task1__item">Ослик Иа</li>
+        <li class="task1__item">Мудрая Сова</li>
+        <li class="task1__item">Кролик. Просто кролик.</li>
+    </ul>
+</div>
+
+<div class="task2">
+    <ul class="tree" id="tree">
+        <li>Животные
+            <ul>
+                <li>Млекопитающие
+                    <ul>
+                        <li>Коровы</li>
+                        <li>Ослы</li>
+                        <li>Собаки</li>
+                        <li>Тигры</li>
+                    </ul>
+                </li>
+                <li>Другие
+                    <ul>
+                        <li>Змеи</li>
+                        <li>Птицы</li>
+                        <li>Ящерицы</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>Рыбы
+            <ul>
+                <li>Аквариумные
+                    <ul>
+                        <li>Гуппи</li>
+                        <li>Скалярии</li>
+                    </ul>
+
+                </li>
+                <li>Морские
+                    <ul>
+                        <li>Морская форель</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+<script>
+
+    /*
+    * Список с выделением
+    * */
+    (function task1() {
+
+        function Item() {
+            let selectedItemIndex = -1,
+                selectClass = "task1__item_clicked",
+                elementsArr = document.querySelectorAll(".task1__item"),
+                self = this;
+
+            this.target = "";
+            this.indexOfEl = -1;
+
+            this.select = function (event) {
+
+                self.target = event.target;
+                self.indexOfEl = Array.prototype.indexOf.call(elementsArr, event.target);
+
+                if (event.shiftKey) {
+                    shiftKey_leftClick();
+                } else if (event.ctrlKey || event.metaKey) {
+                    ctrlKey_leftClick();
+                } else {
+                    leftClick();
+                }
+
+                selectedItemIndex = self.indexOfEl;
+
+            };
+
+            function shiftKey_leftClick() {
+                let minIndex = (self.indexOfEl < selectedItemIndex) ? self.indexOfEl : selectedItemIndex,
+                    maxIndex = (self.indexOfEl > selectedItemIndex) ? self.indexOfEl : selectedItemIndex;
+
+                clearClickedClass();
+
+                for (let a = minIndex; a <= maxIndex; a+=1) {
+                    elementsArr[a].classList.add(selectClass);
+                }
+
+            }
+
+            function ctrlKey_leftClick() {
+                elementsArr[self.indexOfEl].classList.toggle(selectClass);
+            }
+
+            function leftClick() {
+                clearClickedClass();
+                elementsArr[self.indexOfEl].classList.add(selectClass);
+            }
+
+            function clearClickedClass() {
+                Array.prototype.forEach.call(elementsArr, (element)=>{
+                    element.classList.remove(selectClass);
+                })
+            }
+
+        }
+
+        let item = new Item();
+
+        document.querySelector(".task1__list").addEventListener("click", function (e) {
+            if (!e.target.classList.contains("task1__item")) return;
+            item.select(e);
+        });
+
+        document.querySelector(".task1__list").onmousedown = function () {
+            return false;
+        }
+        
+    })();
+
+
+    /*
+    * Дерево: проверка клика на заголовке
+    * */
+    (function task2() {
+        var tree = document.getElementById('tree');
+
+        tree.onclick = function(evt) {
+            var evt = evt || event;
+            var target = evt.target || evt.srcElement;
+
+            let tmpSpan = document.createElement("span");
+            tmpSpan.textContent = target.childNodes[0].textContent;
+            let txtNode = target.childNodes[0];
+            target.replaceChild(tmpSpan, txtNode);
+
+            if (document.elementFromPoint(evt.clientX, evt.clientY) === tmpSpan) {
+                /* раскрыть-закрыть детей */
+                var node = target.getElementsByTagName('ul')[0];
+                if (!node) return; // нет детей
+
+                node.style.display = node.style.display ? '' : 'none';
+            }
+
+            target.replaceChild(txtNode, tmpSpan);
+
+
+        }
+    })();
+
+</script>
+
+
+</body>
+</html>
