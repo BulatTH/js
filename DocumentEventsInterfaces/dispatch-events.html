@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button id="elem">Автоклик</button>
+
+<pre id="rabbit">
+  |\   /|
+   \|_|/
+   /. .\
+  =\_Y_/=
+   {>o<}
+</pre>
+
+<h1 id="hello"> Hello from script! </h1>
+
+<h2 id="helloToVasya"> Hello to Vasya !</h2>
+
+<script>
+    (function ex1() {
+        // let event = new Event("click");
+        // elem.dispatchEvent(event);
+
+        elem.addEventListener("click", function (e) {
+            console.log( e.isTrusted );
+        });
+
+        /*setTimeout(()=>{
+            elem.click();
+        }, 1000);*/
+
+    })();
+
+    (function ex2() {
+        return
+        function hide() {
+            let event = new Event("hide", {
+                cancelable: true
+            });
+            if (!rabbit.dispatchEvent(event)) {
+                console.log( "Canceled" )
+            } else {
+                rabbit.hidden = true;
+            }
+        }
+
+        rabbit.addEventListener("hide", function (e) {
+            if (confirm("execute preventDefault?")) {
+                e.preventDefault()
+            }
+        });
+
+        // setTimeout(hide, 2000);
+
+    })();
+
+    (function ex3() {
+        return;
+        document.addEventListener("hello", function (e) {
+            console.log( "Hello from Event-Hello!" );
+            e.preventDefault();
+        }, false);
+
+        let event_hello = new Event("hello", {bubbles: true, cancelable: true});
+
+        if (hello.dispatchEvent(event_hello) === false) {
+            console.log( "Event hello was canceled!" );
+        }
+
+    })();
+
+    (function ex4() {
+
+        document.addEventListener("anotherHello", function (e) {
+            console.log( `Hello, ${e.detail.name}` );
+        });
+
+        let event = new CustomEvent("anotherHello", {
+            cancelable:true,
+            bubbles: true,
+            detail: {
+                name: "Vasya"
+            }
+        });
+
+        helloToVasya.dispatchEvent(event);
+
+    })();
+
+</script>
+
+</body>
+</html>
