@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<span class="text1"> Hello, dblclick me. I won't be selected </span>
+<br>
+
+<span class="text2"> Снятие выделения пост-фактум </span>
+<br>
+
+
+<script>
+    let txt1 = document.querySelector(".text1");
+
+    txt1.addEventListener("dblclick", function (e) {
+        alert("You're dblclicked me ");
+    });
+
+    txt1.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+    });
+
+    /*
+    * For IE
+    * */
+    txt1.addEventListener("selectstart", function (e) {
+        e.preventDefault();
+    });
+    
+    let txt2 = document.querySelector(".text2");
+    txt2.addEventListener("dblclick", function (e) {
+        clearSelection();
+    });
+    function clearSelection() {
+        if (window.getSelection()) {
+            window.getSelection().removeAllRanges();
+        } else {
+            document.selection.empty();
+        }
+    }
+
+
+</script>
+
+</body>
+</html>
