@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #house {
+            margin-top: 50px;
+            width: 400px;
+            border: 1px solid brown;
+        }
+
+        #roof {
+            width: 0;
+            height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-bottom: 20px solid brown;
+            margin-top: -20px;
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 5px 8px;
+            border: 1px solid #c7c7c7;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            top: 0;
+            left: 0;
+            background: #000000;
+            color: #fff;
+        }
+
+        .hours {
+            color: red;
+        }
+
+        .minutes {
+            color: green;
+        }
+
+        .seconds {
+            color: blue;
+        }
+
+        .clock {
+            border: 1px dashed black;
+            padding: 5px;
+            display: inline-block;
+            background: yellow;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #eee;
+            border: 1px brown solid;
+            padding: 3px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="task1">
+
+    <div data-tooltip="Это – внутренность дома" id="house">
+        <div data-tooltip="Это – крыша" id="roof"></div>
+
+        <p>Жили-были на свете три поросёнка. Три брата.</p>
+
+        <p>Все одинакового роста, кругленькие, розовые, с одинаковыми весёлыми хвостиками.</p>
+
+        <p>Даже имена у них были похожи. Звали поросят Ниф-Ниф, Нуф-Нуф и Наф-Наф. Всё лето они кувыркались в зелёной
+            траве, грелись на солнышке, нежились в лужах.</p>
+
+        <p>Но вот наступила осень. <a href="http://ru.wikipedia.org/wiki/Три_поросёнка"
+                                      data-tooltip="Читать дальше&hellip;">Наведи на меня</a></p>
+
+    </div>
+
+</div>
+
+<div class="task2">
+    <div id="elem" class="clock">
+        <span class="hours">12</span> :
+        <span class="minutes">30</span> :
+        <span class="seconds">00</span>
+    </div>
+</div>
+
+<script>
+    (function task1() {
+        let tooltip,
+            target;
+
+        document.body.addEventListener("mouseover", function (e) {
+
+            target = e.target;
+
+            while (target !== e.currentTarget) {
+                if (target.hasAttribute("data-tooltip")) {
+                    break;
+                }
+                target = target.parentNode;
+            }
+
+            if (!target.hasAttribute("data-tooltip")) return;
+
+
+            let coord = target.getBoundingClientRect(),
+                text = target.getAttribute("data-tooltip");
+
+
+            tooltip = document.createElement("div");
+            tooltip.innerHTML = text;
+            tooltip.classList.add("tooltip");
+
+            target.parentNode.appendChild(tooltip);
+
+            let height = tooltip.offsetHeight,
+                width = tooltip.offsetWidth;
+
+
+            let maxLeftPos = (target.parentNode.getBoundingClientRect()["left"] + 2),
+                leftPos = (getCoords(target)["left"] + target.offsetWidth / 2) - (width / 2);
+
+            let topPos = (coord.top - height - 8 > 0) ? (getCoords(target)["top"] - height - 5) : (getCoords(target)["top"] + target.offsetHeight + 4);
+
+            tooltip.style.top = (topPos) + "px";
+            tooltip.style.left = Math.max(maxLeftPos, leftPos) + "px";
+            // console.log("Showing Tooltip");
+        });
+
+        document.body.addEventListener("mouseout", function (e) {
+            if (!target.hasAttribute("data-tooltip")) return;
+
+            if (tooltip) {
+                tooltip.parentNode.removeChild(tooltip);
+                tooltip = false;
+                // console.log("Removing Tooltip");
+            }
+
+        });
+
+        function getCoords(elem) {
+            // (1)
+            var box = elem.getBoundingClientRect();
+
+            var body = document.body;
+            var docEl = document.documentElement;
+
+            // (2)
+            var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+            var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+            // (3)
+            var clientTop = docEl.clientTop || body.clientTop || 0;
+            var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+            // (4)
+            var top = box.top + scrollTop - clientTop;
+            var left = box.left + scrollLeft - clientLeft;
+
+            return {
+                top: top,
+                left: left
+            };
+        }
+    })();
+
+    (function task2() {
+        // образец подсказки
+        var tooltip = document.createElement('div');
+        tooltip.className = "tooltip";
+        tooltip.innerHTML = "Подсказка";
+
+        // при "наведении на элемент" показать подсказку
+        let elem = document.getElementById("elem");
+
+        new HoverIntent({
+          elem: elem,
+          over: function() {
+            tooltip.style.left = this.getBoundingClientRect().left + 'px';
+            tooltip.style.top = this.getBoundingClientRect().bottom + 5 + 'px';
+            document.body.appendChild(tooltip);
+          },
+          out: function() {
+            document.body.removeChild(tooltip);
+          }
+        });
+
+        function HoverIntent(options) {
+
+            options = Object.create(options);
+            options.interval = options.interval || 100;
+
+            // скорость меньше 1px/ms  считается остановкой над элементом
+            options.sensetive = options.sensetive || 0.1;
+
+
+            let elem = options.elem;
+
+
+            let cX, cY, cTime; // Current X and Y
+            let pX, pY, pTime; // Previous X and Y
+            let checkSpeedInterval;
+            let isOverElement;
+            let isHover;
+
+
+            elem.addEventListener("mouseover", onMouseOver);
+            elem.addEventListener("mouseout", onMouseOut);
+
+            function onMouseOver(e) {
+                if (isOverElement) return;
+                isOverElement = true;
+
+                pX = e.pageX;
+                pY = e.pageY;
+                pTime = Date.now();
+
+                elem.addEventListener("mousemove", mouseMove);
+                checkSpeedInterval = setInterval(trackSpeed, options.interval);
+            }
+
+            function onMouseOut(e) {
+                if (!e.relatedTarget || !elem.contains(e.relatedTarget)) {
+                    isOverElement = false;
+                    elem.removeEventListener("mousemove", mouseMove);
+                    clearInterval(checkSpeedInterval);
+                    if (isHover) {
+                        options.out.call(elem, e);
+                        isHover = false;
+                    }
+                }
+            }
+
+            function mouseMove(e) {
+                cX = e.pageX;
+                cY = e.pageY;
+                cTime = Date.now();
+            }
+
+            function trackSpeed(event) {
+                let speed;
+
+                if (!cTime || cTime == pTime) {
+                    speed = 0;
+                } else {
+                    speed = Math.sqrt( Math.pow(pX - cX, 2) + Math.pow(pY - cY, 2)  ) / (cTime - pTime);
+                }
+
+
+
+                if (speed < options.sensetive) {
+                    clearInterval(checkSpeedInterval);
+                    isHover = true;
+                    options.over.call(elem, event);
+                } else {
+                    pX = cX;
+                    pY = cY;
+                    pTime = cTime;
+                }
+
+            }
+
+        }
+
+    })();
+</script>
+
+
+</body>
+</html>
