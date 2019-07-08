@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .ex1 {
+            display: none;
+        }
+
+        .ex1__footballField {
+            min-height: 300px;
+            max-width: 500px;
+            width: 95%;
+            background-color: #e9e9e9;
+            padding: 10px;
+        }
+
+        .ex1__ball {
+            width: 50px;
+            height: 50px;
+            border: 1px solid red;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .ex2 {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ex2__footballField {
+            min-height: 300px;
+            max-width: 800px;
+            width: 90%;
+            background-color: #e9e9e9;
+            padding: 10px;
+        }
+
+        .ex2__ball {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .ex2__ball_red {
+            border: 1px solid #c62f47;
+            background-color: #c66772;
+        }
+
+        .ex2__ball_blue {
+            border: 1px solid #3c42c6;
+            background-color: #6d79c6;
+        }
+
+        .ex2__ball_yellow {
+            border: 1px solid #c69e01;
+            background-color: #c6c480;
+        }
+
+        .ex2__ball_grayscale {
+            filter: grayscale(1);
+            cursor: default;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<div class="ex1">
+    <div class="ex1__footballField">
+        <div class="ex1__ball"></div>
+    </div>
+</div>
+
+
+<div class="ex2">
+    <div class="ex2__footballField">
+        <div class="ex2__ball ex2__ball_red"></div>
+        <div class="ex2__ball ex2__ball_blue"></div>
+        <div class="ex2__ball ex2__ball_yellow"></div>
+        <!--<div class="ex2__ball ex2__ball_grayscale"></div>-->
+    </div>
+</div>
+
+
+<script>
+    (function ex1() {
+        let footballField   = document.querySelector(".ex1__footballField"),
+            ball            = document.querySelector(".ex1__ball");
+
+        ball.addEventListener("mousedown", mouseDown);
+        function mouseDown(e) {
+            ball.style.position = "absolute";
+            moveAt(e);
+            // document.body.appendChild(ball);
+            ball.style.zIndex = 1000;
+
+            let coord = getCoords(ball);
+            // let shifX =
+
+            function moveAt(event) {
+                ball.style.top = event.pageY - ball.offsetHeight / 2 + "px";
+                ball.style.left = event.pageX - ball.offsetWidth / 2 + "px";
+            }
+
+            footballField.addEventListener("mousemove", mouseMove);
+            function mouseMove(e) {
+                moveAt(e);
+            }
+
+            ball.addEventListener("mouseup", mouseUp);
+            function mouseUp(e) {
+                footballField.removeEventListener("mousemove", mouseMove);
+                ball.removeEventListener("mouseup", mouseUp);
+            }
+
+        }
+
+
+        function getCoords(elem) {
+            let box = elem.getBoundingClientRect();
+            return {
+                top: box.top + pageYOffset,
+                left: box.left + pageXOffset,
+            }
+        }
+
+    })();
+
+
+    (function ex2() {
+
+        function DragAndDrop(option) {
+            let wrapper = document.querySelector(option.wrapper) || null,
+                draggableEl = option.draggableEl || null;
+
+            let body = document.body,
+                docEl = document.documentElement;
+
+            let zIndex = 0;
+
+            if (wrapper === null || draggableEl === null) return;
+
+            wrapper.addEventListener("mousedown", dragStart);
+
+            function dragStart(e) {
+                draggableEl = (draggableEl.charAt(0) === "." || draggableEl.charAt(0) === "#") ? draggableEl.slice(1) : draggableEl;
+                if (!e.target.classList.contains(draggableEl) || e.target.classList.contains("ex2__ball_grayscale")) return;
+
+
+                let target = e.target;
+                target.setAttribute("data-uniqueId", Date.now());
+
+                let shadow = null;
+
+                if (target.style.position !== "absolute") {
+                    shadow = target.cloneNode(true);
+                    shadow.classList.add("ex2__ball_grayscale");
+
+                    target.insertAdjacentElement("afterEnd", shadow);
+                }
+
+
+                let targetCoordinates = target.getBoundingClientRect();
+
+                let wrapperCoordinates = scrollCoordinates(wrapper);
+
+
+                let target_clicked_top_coordinates = e.pageY - (targetCoordinates["top"] + wrapperCoordinates.scrollTop),
+                    target_clicked_left_coordinates = e.pageX - (targetCoordinates["left"] + wrapperCoordinates.scrollLeft);
+
+                target.style.position = "absolute";
+                zIndex += 10;
+                target.style.zIndex = zIndex;
+
+                docEl.addEventListener("mousemove", drag);
+                function drag(e) {
+                    target.style.top = draggableEl_topPosition(e) + "px";
+                    target.style.left = draggableEl_leftPosition(e) + "px";
+                }
+
+                function draggableEl_topPosition(e) {
+                    let maxTopOffset = (wrapperCoordinates["top"] + wrapper.offsetHeight - target.offsetHeight);
+                    return Math.min(
+                        (Math.max(
+                            (e.pageY - target_clicked_top_coordinates),
+                            (wrapperCoordinates["top"]))
+                        ),
+                        maxTopOffset
+                    );
+                }
+
+                function draggableEl_leftPosition(e) {
+                    let maxLeftOffset = (wrapperCoordinates["left"] + wrapper.offsetWidth - target.offsetWidth);
+
+                    return Math.min(
+                        (Math.max(
+                            (e.pageX - target_clicked_left_coordinates),
+                            (wrapperCoordinates["left"])
+                        )),
+                        maxLeftOffset
+                    );
+                }
+
+                target.addEventListener("mouseup", endDrag);
+                function endDrag(e) {
+                    let endDrag_elements = Array.prototype.slice.call(document.elementsFromPoint(e.pageX, e.pageY));
+                    endDrag_elements.forEach(el => {
+                        if (el.classList.contains("ex2__ball_grayscale")) {
+                            if (el === shadow) {
+                                el.insertAdjacentElement("afterEnd", target);
+                                target.style.position = "";
+                                target.style.top = "";
+                                target.style.left = "";
+                                target.style.zIndex = "";
+                                el.parentNode.removeChild(el);
+                                shadow = null;
+                            }
+                        }
+                    });
+
+                    docEl.removeEventListener("mousemove", drag);
+
+                    if (shadow !== null) {
+                        shadow.parentNode.removeChild(shadow);
+                    }
+                }
+            }
+
+
+            function scrollCoordinates(element) {
+                if (element === undefined) return null;
+
+                let box = element.getBoundingClientRect();
+
+                let scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop,
+                    scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+                let clientTop = docEl.clientTop || body.clientTop || 0,
+                    clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+                let top = box.top + scrollTop - clientTop,
+                    left = box.left + scrollLeft - clientLeft;
+
+                return {
+                    top: top,
+                    left: left,
+                    scrollTop: scrollTop,
+                    scrollLeft: scrollLeft,
+                    boundingClientRect: box
+                };
+            }
+
+        }
+
+        let option1 = {
+            wrapper: ".ex2__footballField",
+            draggableEl: ".ex2__ball"
+        };
+        let draganddrop1 = new DragAndDrop(option1);
+
+    })();
+</script>
+
+</body>
+</html>
