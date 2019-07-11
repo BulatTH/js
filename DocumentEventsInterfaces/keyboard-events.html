@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Keyboard events</title>
+    <style>
+        body {
+            font-family:sans-serif;
+        }
+
+        .example {
+            margin: 5px 10px;
+            border: 1px solid #c6c6c6;
+            padding: 10px;
+            min-height: 50px;
+        }
+
+        .c-input {
+            padding: 5px 8px;
+            font-size: 18px;
+            font-family: sans-serif;
+            outline: none;
+            border: 1px solid #656565;
+        }
+
+        .c-input:focus {
+            outline: none;
+            border: 1px solid #39afd0;
+        }
+
+        .c-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .task {
+            margin: 5px 10px;
+            border: 1px solid #ffa2a4;
+            padding: 10px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="example example1">
+    <label for="example1Input" class="c-label example1__label">KeyCode: <span>#</span></label>
+    <input type="text" class="c-input example1__input" id="example1Input" onkeydown="return false">
+</div>
+
+
+<div class="example example2">
+    <label for="example2Input" class="c-label example2__label">KeyPress: <span>#</span></label>
+    <input type="text" class="c-input example2__input" id="example2Input">
+</div>
+
+<div class="example example3">
+    <label for="example3Input" class="c-label example3__label">input.value: <span>#</span></label>
+    <input type="text" class="c-input example3__input" id="example3Input">
+</div>
+
+<div class="example example4">
+    <label for="example4Input" class="c-label example4__label">Перевод символа в верхний регистр: <span>#</span></label>
+    <input type="text" class="c-input example4__input" id="example4Input">
+</div>
+
+<h1 class="text-center"> Задачи </h1>
+
+<div class="task task1">
+    <label for="task1Input" class="c-label task1__label">Можно ввести только цифры</label>
+    <input type="text" class="c-input task1__input" id="task1Input">
+</div>
+
+<div class="task task2">
+    <label for="task2Input" class="c-label task2__label">Отследить одновременное нажатие Q & W & E</label>
+</div>
+
+
+<script>
+    (function ex1() {
+        let input = document.querySelector(".example1__input");
+        let label = document.querySelector(".example1__label span");
+        input.addEventListener("keyup", keyUp);
+        function keyUp(e) {
+            label.textContent = e.keyCode;
+        }
+    })();
+
+    (function ex2() {
+        let input = document.querySelector(".example2__input");
+        let label = document.querySelector(".example2__label span");
+        input.addEventListener("keypress", keyPress);
+        function keyPress(e) {
+            label.textContent = getChar(e);
+        }
+    })();
+
+    (function ex3() {
+        let input = document.querySelector(".example3__input");
+        let label = document.querySelector(".example3__label span");
+        input.addEventListener("keypress", keyPress);
+        function keyPress(e) {
+            // Так будет показать с задержкой на один символ
+            // label.textContent = input.value;
+
+            // Так будет показывать нормально
+            setTimeout(()=>{
+                label.textContent = input.value;
+            }, 0)
+
+            // Либо просто использовать keyUp
+        }
+    })();
+
+    (function ex4() {
+        let input = document.querySelector(".example4__input");
+        let label = document.querySelector(".example4__label span");
+        input.addEventListener("keypress", keyPress);
+        function keyPress(e) {
+            if (e.ctrlKey || e.altKey || e.metaKey) return;
+            let char = getChar(e);
+            if (!char) return;
+
+            e.target.value = "";
+            label.textContent = char.toUpperCase();
+            return false;
+        }
+    })();
+
+
+    (function task1() {
+        let input = document.querySelector(".task1__input");
+
+        input.addEventListener("keypress", fn);
+
+        function fn(e) {
+            e = e || window.event;
+            if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+            if (e.keyCode < 48 || e.keyCode > 57) {
+                e.preventDefault();
+            }
+        }
+    })();
+
+    (function task2() {
+        let body = document.body;
+
+        function runOnKeys(func, ...codes) {
+            let pressedKeys = {},
+                functionKeys = {};
+
+            codes.forEach(code => {
+                functionKeys[code] = 1;
+            });
+
+
+            body.addEventListener("keydown", fn);
+            function fn(e) {
+                e = e || window.event;
+                let keyCode = e.keyCode;
+                pressedKeys[keyCode] = 1;
+
+
+                if (compare(functionKeys, pressedKeys)) {
+                    pressedKeys = {};
+                    func();
+                }
+
+            }
+
+
+            body.addEventListener("keyup", fn2);
+            function fn2(e) {
+                e = e || window.event;
+                let keyCode = e.keyCode;
+                delete pressedKeys[keyCode];
+            }
+
+            function compare(obj1, obj2){
+
+                if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+                    return false;
+                }
+
+                for (let keyCode in obj1) {
+                    if (!(keyCode in obj2)) return false
+                }
+
+                return true;
+            }
+        }
+
+        runOnKeys(
+            function() { alert("Привет!") },
+            "Q".charCodeAt(0),
+            "W".charCodeAt(0),
+            "E".charCodeAt(0),
+        );
+
+
+    })();
+
+
+
+    function getChar(event) {
+        if (event.which == null) { // IE
+            if (event.keyCode < 32) return null; // спец. символ
+            return String.fromCharCode(event.keyCode)
+        }
+
+        if (event.which != 0 && event.charCode != 0) { // все кроме IE
+            if (event.which < 32) return null; // спец. символ
+            return String.fromCharCode(event.which); // остальные
+        }
+
+        return null; // спец. символ
+    }
+
+</script>
+
+</body>
+</html>
