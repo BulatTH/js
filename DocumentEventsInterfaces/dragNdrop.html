@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Drag N Drop Example</title>
+    <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        body {
+            background-color: #ededed;
+        }
+        
+        .l-dragAndDrop {
+            display: flex;
+            flex-direction: row;
+            max-width: 1200px;
+            width: 100%;
+            margin:auto;
+        }
+
+        .c-availableStudents {
+            width: calc(100% / 12 * 4 - 20px);
+            margin: 10px;
+            background-color: #ffffff;
+            border: 1px solid #c7c7c7;
+        }
+
+
+        .c-listDropTarget {
+            width: calc(100% / 12 * 8 - 20px);
+            margin: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            overflow-y: auto;
+
+            /*align-items: flex-start;*/
+        }
+
+        .not-selectable {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .c-listDropTarget__item {
+            min-height: 200px;
+            width:calc(100% / 12 * 6 - 40px);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0 20px 15px;
+            background-color: #fff;
+            border: 1px solid #c7c7c7;
+        }
+
+        .c-listDropTarget__student {
+            background-color: #eeeeee;
+            border: 1px solid #000000;
+            padding: 8px 5px;
+            margin: 10px;
+            transition: transform .3s ease-out;
+        }
+
+        .c-listDropTarget__student_minimized {
+            transform: scale(0);
+        }
+
+        .c-listDropTarget__trash {
+            margin: 0 20px 10px;
+            flex-grow: 1;
+            background-color: #ffffff;
+            min-height: 200px;
+            border: 1px solid #c7c7c7;
+        }
+
+        .c-title {
+            text-align: center;
+            padding: 8px 4px;
+            font-size: 18px;
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            margin-bottom: 10px;
+        }
+
+        .c-title_colorScheme_bostonBlue {
+            background-color: #317082;
+            color: #ffffff;
+        }
+
+        .draggable {
+            cursor: move;
+        }
+
+        .droppable {
+        }
+
+        .droppable__highlight {
+            border: 1px solid #b6bf06;
+            box-shadow: 2px 2px 5px #f3ffc6fc;
+        }
+
+        .droppable__select {
+            background-color: #fdfff1;
+        }
+
+        .droppable__select .c-title {
+            background-color: #ff8f8f;
+        }
+
+        @media screen and (max-width: 992px) {
+            .c-listDropTarget__item {
+                width:calc(100% - 40px);
+            }
+
+            .c-availableStudents {
+                width: calc(100% / 12 * 6 - 20px);
+            }
+
+            .c-listDropTarget {
+                width: calc(100% / 12 * 6 - 20px);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class="l-dragAndDrop">
+
+    <div class="c-availableStudents">
+        <div class="c-title c-title_colorScheme_bostonBlue"> Available students </div>
+        <div class="c-listDropTarget__student draggable">Student A</div>
+        <div class="c-listDropTarget__student draggable">Student B</div>
+        <div class="c-listDropTarget__student draggable">Student C</div>
+        <div class="c-listDropTarget__student draggable">Student D</div>
+
+        <div class="c-listDropTarget__student draggable">Student F</div>
+        <div class="c-listDropTarget__student draggable">Student G</div>
+    </div>
+
+    <div class="c-listDropTarget">
+
+        <div class="c-listDropTarget__item droppable" data-target-name="teamA">
+            <div class="c-title c-title_colorScheme_bostonBlue" > Team a </div>
+        </div>
+
+        <div class="c-listDropTarget__item droppable" data-target-name="teamB">
+            <div class="c-title c-title_colorScheme_bostonBlue" > Team b </div>
+        </div>
+
+        <div class="c-listDropTarget__item droppable" data-target-name="teamE">
+            <div class="c-title c-title_colorScheme_bostonBlue" > Team e </div>
+            <div class="c-listDropTarget__student draggable">Student E</div>
+        </div>
+
+        <div class="c-listDropTarget__item droppable" data-target-name="teamD">
+            <div class="c-title c-title_colorScheme_bostonBlue" > Team d </div>
+        </div>
+
+        <div class="c-listDropTarget__trash droppable" data-target-name="remove">
+            <div class="c-title c-title_colorScheme_bostonBlue" > Remove </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+
+    let DragManager = function () {
+        let dragObject = {};
+        let self = this;
+
+        let dragElParent;
+
+        function onMouseDown(e) {
+
+            if (e.which !== 1) return;
+
+            let element = e.target.closest(".draggable");
+            if (!element) return;
+
+            dragObject.element = element;
+
+            dragElParent  = element.parentNode;
+
+            dragObject.downX = e.pageX;
+            dragObject.downY = e.pageY;
+
+        }
+
+        function onMouseMove(e) {
+            if (!dragObject.element) return;
+
+            if (!dragObject.avatar) {
+
+                let moveX = e.pageX - dragObject.downX;
+                let moveY = e.pageY - dragObject.downX;
+                if (Math.abs(moveX) < 10 && Math.abs(moveY) < 10) return;
+
+                dragObject.avatar = createAvatar(e);
+
+
+                if (!dragObject.avatar) {
+                    dragObject = {};
+                    return;
+                }
+
+                let coords = getCoordinates(dragObject.avatar);
+                dragObject.shiftX = dragObject.downX - coords.left;
+                dragObject.shiftY = dragObject.downY - coords.top;
+
+                startDrag(e);
+            }
+
+
+            dragObject.avatar.style.left = e.pageX - dragObject.shiftX + "px";
+            dragObject.avatar.style.top = e.pageY - dragObject.shiftY + "px";
+
+
+            let droppable = findDroppable(e);
+            if (droppable) dragEnter(dragObject.avatar, droppable);
+            else dragLeave(dragObject.avatar, droppable);
+        }
+
+        let isHighlighted = false,
+            dropEl;
+
+        function dragEnter(avatar, droppable) {
+            if (droppable === dragElParent) return;
+            if (isHighlighted) return;
+            dropEl = droppable;
+            Array.from(document.querySelectorAll(".droppable")).forEach(item => item.classList.remove("droppable__select"))
+            dropEl.classList.add("droppable__select");
+        }
+
+
+        function dragLeave(avatar, droppable) {
+            if (!dropEl) return;
+            isHighlighted = false;
+            dropEl.classList.remove("droppable__select")
+        }
+
+
+        function onMouseUp(e) {
+            if (dragObject.avatar) {
+                finishDrag(e);
+            }
+
+            dragObject = {};
+        }
+
+        function finishDrag(e) {
+            let dropElem = findDroppable(e);
+
+            resumeSelect();
+
+            if (dropElem) {
+                insertDraggable(dropElem);
+            } else {
+                dragObject.avatar.rollback();
+            }
+
+            dragLeave(dragObject.avatar);
+            dragObject = {};
+
+        }
+
+        function findDroppable(event) {
+            // спрячем переносимый элемент
+            dragObject.avatar.hidden = true;
+
+            // получить самый вложенный элемент под курсором мыши
+            var elem = document.elementFromPoint(event.clientX, event.clientY);
+
+            // показать переносимый элемент обратно
+            dragObject.avatar.hidden = false;
+
+            if (elem == null) {
+                // такое возможно, если курсор мыши "вылетел" за границу окна
+                return null;
+            }
+
+            return elem.closest('.droppable');
+        }
+
+        function insertDraggable(dropElem) {
+
+            if (dropElem.getAttribute("data-target-name") === "remove") {
+                let draggable = dragObject.element;
+                setTimeout(function () {
+                    draggable.classList.add("c-listDropTarget__student_minimized");
+                }, 10);
+                setTimeout(()=>{
+                    draggable.parentNode.removeChild(draggable)
+                }, 200);
+                return;
+            }
+
+            dragObject.element.style.position = "";
+            dragObject.element.style.top = "";
+            dragObject.element.style.left = "";
+            dragObject.element.style.zIndex = "";
+            dragObject.element.style.width = "";
+
+            dropElem.appendChild(dragObject.element);
+
+        }
+
+        function createAvatar(e) {
+            // запомнить старые свойства, чтобы вернуться к ним при отмене переноса
+            var avatar = dragObject.element;
+
+            avatar.style.width = dragObject.element.offsetWidth + "px";
+
+            var old = {
+                parent: avatar.parentNode,
+                nextSibling: avatar.nextSibling,
+                position: avatar.position || '',
+                left: avatar.left || '',
+                top: avatar.top || '',
+                zIndex: avatar.zIndex || ''
+            };
+
+            // функция для отмены переноса
+            avatar.rollback = function() {
+                old.parent.insertBefore(avatar, old.nextSibling);
+                avatar.style.position = old.position;
+                avatar.style.left = old.left;
+                avatar.style.top = old.top;
+                avatar.style.zIndex = old.zIndex;
+                avatar.style.width = "";
+            };
+
+            return avatar;
+        }
+
+        function startDrag(e) {
+            var avatar = dragObject.avatar;
+
+            document.body.appendChild(avatar);
+            avatar.style.zIndex = 9999;
+            avatar.style.position = 'absolute';
+            cancelSelect();
+        }
+
+        function cancelSelect() {
+            dragObject.avatar.classList.add("not-selectable");
+            document.querySelector(".c-availableStudents").classList.add("not-selectable");
+            document.querySelector(".c-listDropTarget").classList.add("not-selectable");
+        }
+
+        function resumeSelect() {
+            dragObject.avatar.classList.remove("not-selectable");
+            document.querySelector(".c-availableStudents").classList.remove("not-selectable");
+            document.querySelector(".c-listDropTarget").classList.remove("not-selectable");
+        }
+
+
+        document.addEventListener("mousedown", onMouseDown);
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+
+    };
+
+    function getCoordinates(element) {
+        if (element === undefined) return null;
+
+        let box = element.getBoundingClientRect(),
+            docEl = document,
+            body = document.body;
+
+
+        let scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop,
+            scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+        let clientTop = docEl.clientTop || body.clientTop || 0,
+            clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+        let top = box.top + scrollTop - clientTop,
+            left = box.left + scrollLeft - clientLeft;
+
+        return {
+            top: top,
+            left: left,
+            scrollTop: scrollTop,
+            scrollLeft: scrollLeft,
+            boundingClientRect: box
+        };
+    }
+
+    let dragMan = new DragManager();
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .c-container {
+            height: 64px;
+            margin: 10px 5px;
+        }
+        .computer {
+            width: 93px;
+            height: 98px;
+            background: url(https://js.cx/clipart/computer.gif) no-repeat;
+            padding: 5px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="c-container">
+    <img src="https://js.cx/browsers/chrome.svg" class="c-container__item draggable">
+    <img src="https://js.cx/browsers/firefox.svg" class="c-container__item draggable">
+    <img src="https://js.cx/browsers/ie.svg" class="c-container__item draggable">
+    <img src="https://js.cx/browsers/opera.svg" class="c-container__item draggable">
+    <img src="https://js.cx/browsers/safari.svg" class="c-container__item draggable">
+</div>
+
+<div class="computer droppable"></div>
+
+<script>
+    let dragObj = {};
+
+    document.onmousedown = function (e) {
+        if (e.which !== 1) {
+            return;
+        }
+
+        let elem = e.target.closest(".draggable");
+        if (!elem) return;
+
+        dragObj.elem = elem;
+        dragObj.downX = e.pageX;
+        dragObj.downY = e.pageY;
+
+
+    };
+
+    document.onmousemove = function (e) {
+        if (!dragObj.elem) return; // элемент не зажат
+
+        if (!dragObj.avatar) {
+            // ------------ посчитать дистанцию, на которую переместился курсор мыши
+            let moveX = e.pageX - dragObj.downX;
+            let moveY = e.pageY - dragObj.downY;
+
+            // ------------ ничего не делать, мышь не передвинулась достаточно далеко
+            if (Math.abs(moveX) < 3 && Math.abs(moveY) < 3) return;
+
+            dragObj.avatar = createAvatar(e);
+            if (!dragObj.avatar) {
+                dragObj = {};
+                return
+            }
+            let coords = getCoords(dragObj.avatar);
+            dragObj.shiftX = dragObj.downX - coords.left;
+            dragObj.shiftY = dragObj.downY - coords.top;
+
+            startDrag(e); // отобразить начало переноса
+        }
+
+        dragObj.avatar.style.left = e.pageX - dragObj.shiftX + 'px';
+        dragObj.avatar.style.top = e.pageY - dragObj.shiftY + 'px';
+
+
+        return false;
+    };
+
+    document.onmouseup = function(e) {
+        // (1) обработать перенос, если он идет
+        if (dragObj.avatar) {
+            finishDrag(e);
+        }
+
+        // в конце mouseup перенос либо завершился, либо даже не начинался
+        // (2) в любом случае очистим "состояние переноса" dragObj
+        dragObj = {};
+    };
+
+    function createAvatar(e) {
+        let avatar = dragObj.elem;
+        var old = {
+            parent: avatar.parentNode,
+            nextSibling: avatar.nextSibling,
+            position: avatar.position || '',
+            left: avatar.left || '',
+            top: avatar.top || '',
+            zIndex: avatar.zIndex || ''
+        };
+
+        avatar.rollback = function() {
+            old.parent.insertBefore(avatar, old.nextSibling);
+            avatar.style.position = old.position;
+            avatar.style.left = old.left;
+            avatar.style.top = old.top;
+            avatar.style.zIndex = old.zIndex
+        };
+
+        return avatar;
+    }
+
+
+    function startDrag(e) {
+        var avatar = dragObj.avatar;
+
+        document.body.appendChild(avatar);
+        avatar.style.zIndex = 9999;
+        avatar.style.position = 'absolute';
+    }
+
+
+    function finishDrag(e) {
+        var dropElem = findDroppable(e);
+
+        if (dropElem) {
+        // ... успешный перенос ...
+        } else {
+        // ... отмена переноса ...
+        }
+    }
+
+    function findDroppable(event) {
+        // спрячем переносимый элемент
+        dragObj.avatar.hidden = true;
+
+        // получить самый вложенный элемент под курсором мыши
+        var elem = document.elementFromPoint(event.clientX, event.clientY);
+
+        // показать переносимый элемент обратно
+        dragObj.avatar.hidden = false;
+
+        if (elem == null) {
+            // такое возможно, если курсор мыши "вылетел" за границу окна
+            return null;
+        }
+
+        return elem.closest('.droppable');
+    }
+
+    function getCoords(elem) { // кроме IE8-
+        var box = elem.getBoundingClientRect();
+
+        return {
+            top: box.top + pageYOffset,
+            left: box.left + pageXOffset
+        };
+
+    }
+
+</script>
+
+</body>
+</html>
