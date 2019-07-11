@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .transformableBlock {
+            border: 1px solid red;
+            padding: 5px;
+            width: 200px;
+            min-height: 50px;
+            margin:20px auto;
+        }
+
+        .scrollableBlock {
+            height: 150px;
+            overflow-y: scroll;
+            font-size: 20px;
+        }
+
+        .scrollableBlock__textarea {
+            height: 80px;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="task-1">
+    <div class="transformableBlock">
+        <div class="transformableBlock__text">При прокрутке колёсика мыши над этим элементом, он будет масштабироваться.</div>
+    </div>
+</div>
+
+<div class="task-2">
+    <div class="scrollableBlock">
+        <textarea name="" id="" cols="30" rows="10" class="scrollableBlock__textarea">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa cum enim iure pariatur quae. Atque eveniet fugit harum officia voluptatum?
+        </textarea>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum eveniet hic laudantium quaerat tempora! Accusantium culpa eligendi eveniet hic illo in incidunt laborum minus nam natus nobis omnis possimus praesentium quas repellat, repellendus reprehenderit repudiandae saepe soluta suscipit totam veritatis vitae voluptatum! Accusantium adipisci aliquam aliquid amet asperiores autem beatae blanditiis corporis cumque debitis delectus dicta dolor dolorem doloremque earum eos esse excepturi illo ipsa ipsum magnam neque nesciunt nihil nostrum nulla numquam omnis perspiciatis possimus quae quaerat quasi qui quos, veritatis. A beatae dolore ea excepturi incidunt ipsam minima odio officiis sapiente vero? Consequatur explicabo fugit itaque maiores recusandae.
+    </div>
+</div>
+
+
+<script>
+    (function task1() {
+        let el = document.querySelector(".transformableBlock__text");
+        mouseWheelEvent(el, onWheel);
+
+        let currentScale = 1;
+
+        function onWheel(e) {
+            let transformableBlock = e.target.closest(".transformableBlock");
+            if (!transformableBlock) return;
+
+            e = e || window.event;
+            let delta = e.deltaY || e.detail || e.wheelDelta;
+            delta = (delta > 0) ? 0.05 : -0.05;
+            currentScale += delta;
+
+            transformableBlock.style.transform =
+                transformableBlock.style.webkitTransform =
+                    transformableBlock.style.mozTransform = `scale(${currentScale})`;
+        }
+
+    })();
+
+
+    (function task2() {
+        let el = document.querySelector(".scrollableBlock__textarea");
+        mouseWheelEvent(el, wheelF);
+        function wheelF(e) {
+            e = e || window.event;
+            let delta = e.deltaY || e.detail || e.wheelDelta;
+
+
+            if (e.target.scrollTop === e.target.scrollHeight - e.target.clientHeight && delta !== -100)
+                e.preventDefault();
+
+            if (e.target.scrollTop === 0 && e.deltaY !== 100)
+                e.preventDefault();
+
+
+        }
+    })();
+
+
+    function mouseWheelEvent(elem, wheelFunction) {
+        if (elem.addEventListener) {
+            if ('onwheel' in document) {
+                // IE9+, FF17+, Ch31+
+                elem.addEventListener("wheel", wheelFunction);
+            } else if ('onmousewheel' in document) {
+                // устаревший вариант события
+                elem.addEventListener("mousewheel", wheelFunction);
+            } else {
+                // Firefox < 17
+                elem.addEventListener("MozMousePixelScroll", wheelFunction);
+            }
+        } else { // IE8-
+            elem.attachEvent("onmousewheel", wheelFunction);
+        }
+    }
+    
+</script>
+
+</body>
+</html>

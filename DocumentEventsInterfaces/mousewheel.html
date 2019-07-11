@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .scrollStatus {
+            margin: 10px;
+        }
+
+        .scrollBlock {
+            margin: 10px;
+            height: 200px;
+            width: 200px;
+            background-color: #e9e9e9;
+            border: 1px solid #c6c6c6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="scrollStatus">
+    Scroll: <span>0</span>
+</div>
+
+<div class="scrollBlock"></div>
+
+<script>
+    let elem = document.querySelector(".scrollBlock");
+    mouseWheelEvent(elem, onWheel);
+
+    function mouseWheelEvent(elem, wheelFunction) {
+        if (elem.addEventListener) {
+            if ('onwheel' in document) {
+                // IE9+, FF17+, Ch31+
+                elem.addEventListener("wheel", wheelFunction);
+            } else if ('onmousewheel' in document) {
+                // устаревший вариант события
+                elem.addEventListener("mousewheel", wheelFunction);
+            } else {
+                // Firefox < 17
+                elem.addEventListener("MozMousePixelScroll", wheelFunction);
+            }
+        } else { // IE8-
+            elem.attachEvent("onmousewheel", wheelFunction);
+        }
+    }
+
+
+
+    let value = 0,
+        querySelector = document.querySelector(".scrollStatus span");
+
+    function onWheel(e) {
+        e = e || window.event;
+        let delta = e.deltaY || e.detail || e.wheelDelta;
+        value += delta;
+        querySelector.textContent = value;
+    }
+
+</script>
+
+</body>
+</html>
