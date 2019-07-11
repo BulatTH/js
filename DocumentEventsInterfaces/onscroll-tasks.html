@@ -190,7 +190,6 @@
     </div>
 </div>
 
-
 <div class="c-task task3">
     <div class="task3__content">
         <p>Тексты и картинки взяты с сайта http://etoday.ru. </p>
@@ -330,7 +329,7 @@
 
                 function start() {
                     scrollEl.addEventListener("scroll", onScroll);
-                    preventParentScroll(scrollEl);
+                    // preventParentScroll(scrollEl);
 
                     function onScroll(e) {
                         let scrollTop = e.target.scrollTop;
@@ -413,7 +412,7 @@
 
             let containerHeight = scrollContainer.offsetHeight;
 
-            preventParentScroll(scrollContainer);
+            // preventParentScroll(scrollContainer);
 
             scrollContainer.addEventListener("scroll",onScroll);
             function onScroll(e) {
