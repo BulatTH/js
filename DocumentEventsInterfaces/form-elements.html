@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form name="my">
+    <input type="text" name="login">
+    <input type="password" name="password">
+    <input type="radio" name="age" value="18">
+    <input type="radio" name="age" value="19">
+
+    <input type="submit" name="button">
+</form>
+
+
+<select name="select" id="">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+</select>
+
+<div class="c-task task-1">
+    <select class="select-task1">
+        <option value="Rock">Рок</option>
+        <option value="Blues" selected>Блюз</option>
+    </select>
+</div>
+
+<script>
+    (function ex1() {
+        let form = document.forms.my;
+        let loginInput = form.elements.login,
+            age = form.elements.age;
+        console.log( age )
+    })();
+
+    (function ex2() {
+        let select = document.querySelector("select[name='select']");
+        setTimeout(()=>{
+            select.selectedIndex = 1;
+        }, 1000);
+        console.log( select.options )
+    })();
+
+
+    (function task1() {
+        let select = document.querySelector("select.select-task1");
+
+        // Выведите значение и текст текущей выбранной опции.
+        let options = select.options;
+        let selectedOption = options[options.selectedIndex];
+        console.log( selectedOption.value + " : " + selectedOption.text );
+
+        // Добавьте опцию: <option value="Classic">Классика</option>.
+        select.appendChild(new Option("Classic", "Классика"));
+
+        // Сделайте её выбранной.
+        setTimeout(() => {
+            options.selectedIndex = options.length - 1;
+        }, 1000);
+
+
+    })();
+</script>
+
+</body>
+</html>
