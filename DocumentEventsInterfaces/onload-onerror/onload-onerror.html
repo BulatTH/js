@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Загрузка скриптов, картинок, фреймов: onload и onerror
+    </title>
+
+    <style>
+        body {
+            font-family:sans-serif, Arial;
+        }
+        .c-task {
+            min-height: 100px;
+            max-width: 800px;
+            width: 95%;
+            margin: 15px auto;
+            border: 1px solid #c6c6c6;
+        }
+
+        .c-task__title {
+            padding: 10px 5px;
+            background-color: #474851;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .c-task__content {
+            padding: 10px;
+        }
+
+        .task1__replacementText {
+            display: inline-block;
+            margin: 5px 10px;
+            border: 1px solid #c3c3c3;
+            padding: 5px;
+
+        }
+    </style>
+
+</head>
+<body>
+
+
+<div class="c-task task1">
+    <div class="c-task__title">Задача №1: Красивый ALT</div>
+    <div class="c-task__content">
+
+        <div style="width:114px;height:40px;font-size:32px;letter-spacing:3px" class="task1__replacementText" data-img-src="https://js.cx/search/google.png">
+            <span style="color:#1A53F7">G</span><span style="color:#E42131">o</span><span style="color:#FEB819">o</span><span style="color:#164AF2">g</span><span style="color:#00a315">l</span><span style="color:#E42131">e</span>
+        </div>
+
+        <!-- Яндекс -->
+        <div style="width:101px;height:40px;font-size:32px" class="task1__replacementText" data-img-src="https://js.cx/search/yandex.png">
+            <span style="color:#F00">Я</span>ндекс
+        </div>
+
+        <!-- Bing -->
+        <div style="width:100px;height:40px;font-size:32px;color:#006dd4;font-weight:bold;letter-spacing: 3px; font-family:sans-serif" class="task1__replacementText" data-img-src="https://js.cx/search/bing.png">bing</div>
+
+    </div>
+</div>
+
+<div class="c-task task2">
+    <div class="c-task__title">Задача №2: Загрузить изображения с коллбэком</div>
+    <div class="c-task__content task2__content">
+
+    </div>
+</div>
+
+
+<div class="c-task task3">
+    <div class="c-task__title">Задача №3: Скрипт с коллбэком</div>
+    <div class="c-task__content task3__content">
+
+    </div>
+</div>
+
+
+<div class="c-task task4">
+    <div class="c-task__title">Задача №4: Скрипты с коллбэком</div>
+    <div class="c-task__content task4__content">
+
+    </div>
+</div>
+
+
+
+<script>
+    (function scriptOnload() {
+        document.addEventListener("DOMContentLoaded", function (e) {
+            let script = document.createElement("script");
+            script.src = "externalScript.js";
+            document.body.appendChild(script);
+
+            script.onerror = function () {
+                throw new Error(`Script is missing: ${this.src}`);
+            };
+
+            script.onload = function () {
+                console.log( _(1,2) );
+            }
+
+
+        });
+    })();
+    
+    
+    (function crossBrouserSolution() {
+        var script = document.createElement('script');
+        script.src = "https://code.jquery.com/jquery.js";
+//        script.src = "externalScript.js";
+        document.documentElement.appendChild(script);
+
+        function afterLoad() {
+            console.log( "Загрузка завершена: " + typeof(jQuery) );
+        }
+
+        script.onload = script.onerror = function() {
+            if (!this.executed) { // выполнится только один раз
+                this.executed = true;
+                afterLoad();
+            }
+        };
+
+        script.onreadystatechange = function() {
+            var self = this;
+            if (this.readyState == "complete" || this.readyState == "loaded") {
+                setTimeout(function() {
+                    self.onload()
+                }, 0); // сохранить "this" для onload
+            }
+        };
+    })();
+
+
+    (function task1() {
+        document.addEventListener("DOMContentLoaded", function (e) {
+            let elements = Array.prototype.slice.call(document.querySelectorAll(".task1__replacementText"));
+
+            elements.forEach((el, index, arrOfEl)=>{
+                let src = el.getAttribute("data-img-src");
+                let img = document.createElement("img");
+                img.src = src;
+
+
+                img.onload = function () {
+                    let div = document.createElement("div");
+                    div.classList.add("task1__replacementText");
+                    div.appendChild(img);
+                    el.parentNode.replaceChild(div, el);
+                };
+            })
+        })
+    })();
+
+    (function task2() {
+        function preloadImages(sources, callback) {
+            let countOfSources = sources.length,
+                countOfLoaded = 0;
+
+            sources.forEach(source => {
+                let img = document.createElement("img");
+                img.src = source;
+                document.body.appendChild(img);
+                document.body.removeChild(img);
+
+                img.onload = img.onerror = function () {
+                    countOfLoaded++;
+                    if (countOfLoaded === countOfSources) {
+                        callback();
+                    }
+                }
+            })
+
+        }
+
+
+        var sources = [
+            "https://js.cx/images-load/1.jpg",
+            "https://js.cx/images-load/2.jpg",
+            "https://js.cx/images-load/3.jpg"
+        ];
+        for (var i = 0; i < sources.length; i++) {
+            sources[i] += '?' + Math.random(); // добавляем параметр, чтобы без кеша (для теста)
+        }
+
+        /** если картинка загружена, то можно будет сразу получить её ширину
+         * создадим все картинки и проверим, есть ли у них ширина
+         */
+        function testLoaded() {
+            var widthSum = 0;
+            for (var i = 0; i < sources.length; i++) {
+                var img = document.createElement('img');
+                img.src = sources[i];
+                widthSum += img.width;
+            }
+            // каждое изображение 100x100, общая ширина должна быть 300px
+            let txtNode = document.createTextNode(`Sum of all sources width: ${widthSum}`);
+            document.querySelector(".task2__content").appendChild(txtNode);
+            document.querySelector(".task2__content").appendChild(document.createElement("br"));
+
+        }
+
+        // до загрузки - выведет 0
+        testLoaded();
+
+        // после загрузки - выведет 300
+        preloadImages(sources, testLoaded);
+    })();
+
+
+    (function task3() {
+        function addScript(src, callback) {
+            let script = document.createElement("script");
+            script.src = src;
+            document.body.insertAdjacentElement("beforeEnd", script);
+
+            script.onload = function () {
+                callback();
+            }
+
+        }
+
+        addScript("go.js", function() {
+            go(document.querySelector(".task3__content"));
+        });
+
+    })();
+
+    (function task4() {
+        function addScripts(arr, fc) {
+            Promise.all(arr.map(url => {
+                return new Promise(resolve => {
+                    let script = document.createElement("script");
+                    script.src = url;
+                    document.body.appendChild(script);
+                    script.onload = () => resolve(script);
+                })
+            })).then(() => fc())
+        }
+
+
+        addScripts(["a.js", "b.js", "c.js"], function () {
+            console.log( a() );
+        })
+
+    })();
+
+</script>
+
+
+</body>
+</html>
